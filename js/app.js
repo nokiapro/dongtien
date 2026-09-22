@@ -202,6 +202,7 @@ function renderDailyTotals() {
 // ============================================================
 function renderTable() {
     const tbody = document.getElementById('tableBody');
+    const mobileCards = document.getElementById('mobileCards');
     const emptyState = document.getElementById('emptyState');
     const search = document.getElementById('searchInput').value.toLowerCase().trim();
     const filterMonth = document.getElementById('filterMonth').value;
@@ -216,12 +217,14 @@ function renderTable() {
 
     if (filtered.length === 0) {
         tbody.innerHTML = '';
+        mobileCards.innerHTML = '';
         emptyState.classList.remove('d-none');
         return;
     }
 
     emptyState.classList.add('d-none');
 
+    // Desktop table rows
     tbody.innerHTML = filtered.map((item, index) => {
         const actionBtns = isAdmin ? `
             <td class="text-center">
@@ -244,6 +247,45 @@ function renderTable() {
                 <td class="amount">${formatMoney(item.tienDong)}</td>
                 ${actionBtns}
             </tr>
+        `;
+    }).join('');
+
+    // Mobile cards (no horizontal scroll)
+    mobileCards.innerHTML = filtered.map((item, index) => {
+        const actionBtns = isAdmin ? `
+            <div class="mobile-card-actions">
+                <button class="btn btn-sm btn-outline-primary" onclick="openEditModal('${item.id}')">
+                    <i class="bi bi-pencil me-1"></i>Sửa
+                </button>
+                <button class="btn btn-sm btn-outline-danger" onclick="openDeleteModal('${item.id}')">
+                    <i class="bi bi-trash me-1"></i>Xóa
+                </button>
+            </div>
+        ` : '';
+
+        return `
+            <div class="mobile-card">
+                <div class="mobile-card-header">
+                    <span class="mobile-card-index">#${index + 1}</span>
+                    <strong class="mobile-card-name">${escapeHtml(item.ten || '')}</strong>
+                    <span class="amount mobile-card-amount">${formatMoney(item.tienDong)}</span>
+                </div>
+                <div class="mobile-card-body">
+                    <div class="mobile-card-row">
+                        <span class="label"><i class="bi bi-calendar3 me-1"></i>Ngày</span>
+                        <span>${item.ngay}/${item.thang}</span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span class="label"><i class="bi bi-clock me-1"></i>Giờ</span>
+                        <span>${item.gio || '—'}</span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span class="label"><i class="bi bi-tag me-1"></i>Tháng</span>
+                        <span class="badge bg-primary">Tháng ${item.thang}</span>
+                    </div>
+                </div>
+                ${actionBtns}
+            </div>
         `;
     }).join('');
 }

@@ -104,8 +104,8 @@
                     </div>
                 </div>
 
-                <!-- Table -->
-                <div class="table-container">
+                <!-- Table (desktop) + Cards (mobile) -->
+                <div class="table-container d-none d-md-block">
                     <table class="table table-hover align-middle">
                         <thead>
                             <tr>
@@ -120,10 +120,11 @@
                         </thead>
                         <tbody id="tableBody"></tbody>
                     </table>
-                    <div id="emptyState" class="empty-state d-none">
-                        <i class="bi bi-inbox display-4 d-block mb-3"></i>
-                        <p class="mb-0">Chưa có dữ liệu nào.</p>
-                    </div>
+                </div>
+                <div id="mobileCards" class="mobile-cards d-md-none"></div>
+                <div id="emptyState" class="empty-state d-none">
+                    <i class="bi bi-inbox display-4 d-block mb-3"></i>
+                    <p class="mb-0">Chưa có dữ liệu nào.</p>
                 </div>
             </div>
         </div>
@@ -183,7 +184,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Giờ</label>
-                                <input type="time" class="form-control" id="gio">
+                                <input type="time" class="form-control" id="gio" step="1">
                             </div>
                         </div>
                         <div class="mb-3">
