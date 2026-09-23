@@ -1,6 +1,3 @@
-// ============================================================
-// FIREBASE CONFIG
-// ============================================================
 const firebaseConfig = {
     apiKey: "AIzaSyC1Kr7F-VabqWhw6YdZ7nI0f4yWXzNtWoA",
     authDomain: "dongtien-39b49.firebaseapp.com",
@@ -11,9 +8,6 @@ const firebaseConfig = {
     appId: "1:609298110570:web:623ca8cfce1edc8ad6d213"
 };
 
-// ============================================================
-// KHỞI TẠO
-// ============================================================
 let app, auth, db;
 let data = [];
 let isAdmin = false;
@@ -66,9 +60,6 @@ function initFirebase() {
     }
 }
 
-// ============================================================
-// UI ADMIN
-// ============================================================
 function updateAdminUI() {
     const adminOnly = [
         document.getElementById('btnAdd'),
@@ -97,9 +88,6 @@ function updateAdminUI() {
     renderTable();
 }
 
-// ============================================================
-// ĐĂNG NHẬP / ĐĂNG XUẤT
-// ============================================================
 async function doLogin() {
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPass').value;
@@ -148,12 +136,9 @@ document.getElementById('loginPass').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') doLogin();
 });
 
-// ============================================================
-// THỐNG KÊ
-// ============================================================
 function formatMoney(amount) {
     const n = Number(amount) || 0;
-    return new Intl.NumberFormat('vi-VN').format(n) + ' XU';
+    return new Intl.NumberFormat('vi-VN').format(n) + ' Xu';
 }
 
 function updateStats() {
@@ -176,9 +161,6 @@ function updateStats() {
 
 }
 
-// ============================================================
-// LỊCH ĐÓNG XU
-// ============================================================
 function openCalendarModal() {
     calMonth = new Date().getMonth() + 1;
     renderCalendar();
@@ -195,7 +177,6 @@ function changeCalMonth(delta) {
 }
 
 function getDaysInMonth(month) {
-    // year-less data: use 2024 (leap) for Feb max days
     return new Date(2024, month, 0).getDate();
 }
 
@@ -204,7 +185,6 @@ function renderCalendar() {
     const grid = document.getElementById('calGrid');
     const daysInMonth = getDaysInMonth(calMonth);
 
-    // Map day -> { total, count }
     const dayMap = {};
     data.forEach(item => {
         if (Number(item.thang) !== calMonth) return;
@@ -214,7 +194,6 @@ function renderCalendar() {
         dayMap[d].count += 1;
     });
 
-    // Weekday of day 1 (0=Sun) using 2024 as reference year
     const startWeekday = new Date(2024, calMonth - 1, 1).getDay();
 
     let html = '';
@@ -237,7 +216,6 @@ function showCalDayDetail(day) {
     const title = document.getElementById('calDetailTitle');
     const totalEl = document.getElementById('calDetailTotal');
 
-    // Highlight selected
     document.querySelectorAll('.cal-cell').forEach(el => el.classList.remove('selected'));
     const btn = document.querySelector(`.cal-cell[data-day="${day}"]`);
     if (btn) btn.classList.add('selected');
@@ -247,7 +225,7 @@ function showCalDayDetail(day) {
     totalEl.textContent = formatMoney(total);
 
     if (items.length === 0) {
-        list.innerHTML = '<p class="text-muted small mb-0">Chưa có ai đóng XU ngày này.</p>';
+        list.innerHTML = '<p class="text-muted small mb-0">Chưa có ai đóng Xu ngày này.</p>';
     } else {
         list.innerHTML = items.map(item => `
             <div class="cal-detail-item">
@@ -262,9 +240,6 @@ function showCalDayDetail(day) {
     detail.classList.remove('d-none');
 }
 
-// ============================================================
-// BẢNG
-// ============================================================
 function renderTable(resetPage) {
     const tbody = document.getElementById('tableBody');
     const mobileCards = document.getElementById('mobileCards');
@@ -278,7 +253,6 @@ function renderTable(resetPage) {
 
     const totalPages = Math.max(1, Math.ceil(filteredCache.length / PAGE_SIZE));
     if (resetPage !== false) {
-        // Reset page when filters/search change (default), keep when paginating
         if (typeof resetPage === 'undefined') currentPage = 1;
     }
     if (currentPage > totalPages) currentPage = totalPages;
@@ -297,7 +271,6 @@ function renderTable(resetPage) {
     const start = (currentPage - 1) * PAGE_SIZE;
     const pageItems = filteredCache.slice(start, start + PAGE_SIZE);
 
-    // Desktop table rows (max 5, no scrollbar)
     tbody.innerHTML = pageItems.map((item, index) => {
         const rowNum = start + index + 1;
         const actionBtns = isAdmin ? `
@@ -324,7 +297,6 @@ function renderTable(resetPage) {
         `;
     }).join('');
 
-    // Mobile cards
     mobileCards.innerHTML = pageItems.map((item, index) => {
         const rowNum = start + index + 1;
         const actionBtns = isAdmin ? `
@@ -364,7 +336,6 @@ function renderTable(resetPage) {
         `;
     }).join('');
 
-    // Pagination UI
     if (filteredCache.length > PAGE_SIZE) {
         paginationBar.classList.remove('d-none');
         document.getElementById('pageInfo').textContent = `${currentPage} / ${totalPages}`;
@@ -389,9 +360,6 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// ============================================================
-// CRUD
-// ============================================================
 function openAddModal() {
     if (!isAdmin) return;
     document.getElementById('modalTitle').textContent = 'Thêm bản ghi mới';
@@ -504,9 +472,6 @@ async function clearAll() {
     }
 }
 
-// ============================================================
-// KHỞI TẠO
-// ============================================================
 function init() {
     initFirebase();
 }

@@ -1,6 +1,3 @@
-/* ============================================================
-   PREMIUM MODERN UI – Quản lý Tiền Đóng
-   ============================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
@@ -55,9 +52,6 @@ body {
     margin: 0 auto;
 }
 
-/* ============================================================
-   MAIN CARD – Glass panel
-   ============================================================ */
 .main-card {
     background: var(--surface);
     backdrop-filter: blur(24px);
@@ -68,9 +62,6 @@ body {
     border: 1px solid rgba(255,255,255,0.35);
 }
 
-/* ============================================================
-   HEADER
-   ============================================================ */
 .header-section {
     background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #a855f7 100%);
     color: #fff;
@@ -139,9 +130,6 @@ body {
     color: #fff;
 }
 
-/* ============================================================
-   STATS – Premium cards
-   ============================================================ */
 .stats-bar {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -219,9 +207,6 @@ body {
     letter-spacing: 0.04em;
 }
 
-/* ============================================================
-   DAILY TOTALS
-   ============================================================ */
 .daily-total-card {
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
     border: 1px solid rgba(16, 185, 129, 0.25);
@@ -254,9 +239,6 @@ body {
     padding-bottom: 0;
 }
 
-/* ============================================================
-   SEARCH & FILTERS
-   ============================================================ */
 .input-group-text {
     background: #f8fafc;
     border-color: var(--border-strong);
@@ -289,9 +271,6 @@ body {
     font-size: 0.875rem;
 }
 
-/* ============================================================
-   TABLE
-   ============================================================ */
 .table-container {
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
@@ -361,9 +340,6 @@ body {
     transform: scale(1.08);
 }
 
-/* ============================================================
-   EMPTY STATE
-   ============================================================ */
 .empty-state {
     text-align: center;
     padding: 64px 20px;
@@ -374,9 +350,6 @@ body {
     opacity: 0.4;
 }
 
-/* ============================================================
-   ADMIN BADGE
-   ============================================================ */
 .admin-badge {
     background: rgba(255, 255, 255, 0.2);
     color: #fff;
@@ -389,9 +362,6 @@ body {
     backdrop-filter: blur(8px);
 }
 
-/* ============================================================
-   MODALS
-   ============================================================ */
 .modal-content {
     border: none;
     border-radius: 18px;
@@ -449,9 +419,6 @@ body {
     font-weight: 600;
 }
 
-/* ============================================================
-   LOADING
-   ============================================================ */
 .loading-overlay {
     position: fixed;
     inset: 0;
@@ -470,16 +437,10 @@ body {
     color: #a5b4fc !important;
 }
 
-/* ============================================================
-   UTILITIES
-   ============================================================ */
 .hidden {
     display: none !important;
 }
 
-/* ============================================================
-   MOBILE CARDS
-   ============================================================ */
 .mobile-cards {
     display: flex;
     flex-direction: column;
@@ -570,18 +531,12 @@ body {
     padding: 8px;
 }
 
-/* ============================================================
-   FOOTER TEXT
-   ============================================================ */
 .container > p.text-center {
     color: rgba(255,255,255,0.55) !important;
     font-weight: 500;
     letter-spacing: 0.02em;
 }
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
 @media (max-width: 991.98px) {
     .header-section {
         padding: 18px 20px;
@@ -700,9 +655,6 @@ body {
     }
 }
 
-/* ============================================================
-   CALENDAR BUTTON & MODAL
-   ============================================================ */
 .search-bar {
     display: flex;
     align-items: stretch;
@@ -867,9 +819,6 @@ body {
     font-size: 0.9rem;
 }
 
-/* ============================================================
-   PAGINATION
-   ============================================================ */
 .pagination-bar {
     display: flex;
     align-items: center;
@@ -917,7 +866,6 @@ body {
     box-shadow: none;
 }
 
-/* Header clear button */
 #btnClearAllHeader {
     border: 1.5px solid rgba(255, 255, 255, 0.45);
     background: rgba(239, 68, 68, 0.2);
@@ -930,9 +878,6 @@ body {
     color: #fff;
 }
 
-/* ============================================================
-   SCROLLBAR
-   ============================================================ */
 .table-container::-webkit-scrollbar {
     width: 6px;
     height: 6px;
