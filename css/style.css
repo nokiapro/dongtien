@@ -288,13 +288,11 @@ body {
    TABLE
    ============================================================ */
 .table-container {
-    max-height: 520px;
-    overflow: auto;
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
     background: #fff;
     box-shadow: var(--shadow);
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
 }
 
 .table {
@@ -694,6 +692,69 @@ body {
 .stat-value {
         font-size: 1.05rem;
     }
+}
+
+/* ============================================================
+   PAGINATION
+   ============================================================ */
+.pagination-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 18px;
+    padding: 10px 0 2px;
+}
+
+.page-info {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    min-width: 64px;
+    text-align: center;
+    letter-spacing: 0.02em;
+}
+
+.btn-page {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid var(--border-strong);
+    background: #fff;
+    color: var(--primary-dark);
+    font-weight: 700;
+    transition: all var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.btn-page:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    color: #fff;
+    border-color: transparent;
+    transform: translateY(-1px);
+}
+
+.btn-page:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Header clear button */
+#btnClearAllHeader {
+    border: 1.5px solid rgba(255, 255, 255, 0.45);
+    background: rgba(239, 68, 68, 0.2);
+    color: #fff;
+}
+
+#btnClearAllHeader:hover {
+    background: rgba(239, 68, 68, 0.45);
+    border-color: #fff;
+    color: #fff;
 }
 
 /* ============================================================

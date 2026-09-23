@@ -20,6 +20,9 @@ let isAdmin = false;
 let currentUser = null;
 let deleteId = null;
 let unsubscribe = null;
+const PAGE_SIZE = 5;
+let currentPage = 1;
+let filteredCache = [];
 
 const formModal = new bootstrap.Modal(document.getElementById('formModal'));
 const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
@@ -66,7 +69,7 @@ function initFirebase() {
 function updateAdminUI() {
     const adminOnly = [
         document.getElementById('btnAdd'),
-        document.getElementById('btnClearAll'),
+        document.getElementById('btnClearAllHeader'),
         document.getElementById('actionCol'),
         document.getElementById('adminBadge'),
         document.getElementById('btnLogout')
@@ -74,10 +77,12 @@ function updateAdminUI() {
     const guestOnly = [document.getElementById('btnLogin')];
 
     adminOnly.forEach(el => {
+        if (!el) return;
         if (isAdmin) el.classList.remove('hidden');
         else el.classList.add('hidden');
     });
     guestOnly.forEach(el => {
+        if (!el) return;
         if (isAdmin) el.classList.add('hidden');
         else el.classList.remove('hidden');
     });
@@ -144,7 +149,8 @@ document.getElementById('loginPass').addEventListener('keypress', function (e) {
 // THỐNG KÊ
 // ============================================================
 function formatMoney(amount) {
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount || 0);
+    const n = Number(amount) || 0;
+    return new Intl.NumberFormat('vi-VN').format(n) + ' XU';
 }
 
 function updateStats() {
@@ -200,32 +206,46 @@ function renderDailyTotals() {
 // ============================================================
 // BẢNG
 // ============================================================
-function renderTable() {
+function renderTable(resetPage) {
     const tbody = document.getElementById('tableBody');
     const mobileCards = document.getElementById('mobileCards');
     const emptyState = document.getElementById('emptyState');
+    const paginationBar = document.getElementById('paginationBar');
     const search = document.getElementById('searchInput').value.toLowerCase().trim();
     const filterMonth = document.getElementById('filterMonth').value;
     const filterDay = document.getElementById('filterDay').value;
 
-    let filtered = data.filter(item => {
+    filteredCache = data.filter(item => {
         const matchName = !search || (item.ten || '').toLowerCase().includes(search);
         const matchMonth = !filterMonth || Number(item.thang) === Number(filterMonth);
         const matchDay = !filterDay || Number(item.ngay) === Number(filterDay);
         return matchName && matchMonth && matchDay;
     });
 
-    if (filtered.length === 0) {
+    const totalPages = Math.max(1, Math.ceil(filteredCache.length / PAGE_SIZE));
+    if (resetPage !== false) {
+        // Reset page when filters/search change (default), keep when paginating
+        if (typeof resetPage === 'undefined') currentPage = 1;
+    }
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    if (filteredCache.length === 0) {
         tbody.innerHTML = '';
         mobileCards.innerHTML = '';
         emptyState.classList.remove('d-none');
+        paginationBar.classList.add('d-none');
         return;
     }
 
     emptyState.classList.add('d-none');
 
-    // Desktop table rows
-    tbody.innerHTML = filtered.map((item, index) => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageItems = filteredCache.slice(start, start + PAGE_SIZE);
+
+    // Desktop table rows (max 5, no scrollbar)
+    tbody.innerHTML = pageItems.map((item, index) => {
+        const rowNum = start + index + 1;
         const actionBtns = isAdmin ? `
             <td class="text-center">
                 <button class="btn btn-sm btn-outline-primary btn-action me-1" onclick="openEditModal('${item.id}')" title="Sửa">
@@ -239,7 +259,7 @@ function renderTable() {
 
         return `
             <tr>
-                <td>${index + 1}</td>
+                <td>${rowNum}</td>
                 <td><strong>${escapeHtml(item.ten || '')}</strong></td>
                 <td>${item.ngay}</td>
                 <td>${item.gio || '—'}</td>
@@ -250,8 +270,9 @@ function renderTable() {
         `;
     }).join('');
 
-    // Mobile cards (no horizontal scroll)
-    mobileCards.innerHTML = filtered.map((item, index) => {
+    // Mobile cards
+    mobileCards.innerHTML = pageItems.map((item, index) => {
+        const rowNum = start + index + 1;
         const actionBtns = isAdmin ? `
             <div class="mobile-card-actions">
                 <button class="btn btn-sm btn-outline-primary" onclick="openEditModal('${item.id}')">
@@ -266,7 +287,7 @@ function renderTable() {
         return `
             <div class="mobile-card">
                 <div class="mobile-card-header">
-                    <span class="mobile-card-index">#${index + 1}</span>
+                    <span class="mobile-card-index">#${rowNum}</span>
                     <strong class="mobile-card-name">${escapeHtml(item.ten || '')}</strong>
                     <span class="amount mobile-card-amount">${formatMoney(item.tienDong)}</span>
                 </div>
@@ -288,6 +309,24 @@ function renderTable() {
             </div>
         `;
     }).join('');
+
+    // Pagination UI
+    if (filteredCache.length > PAGE_SIZE) {
+        paginationBar.classList.remove('d-none');
+        document.getElementById('pageInfo').textContent = `${currentPage} / ${totalPages}`;
+        document.getElementById('btnPrevPage').disabled = currentPage <= 1;
+        document.getElementById('btnNextPage').disabled = currentPage >= totalPages;
+    } else {
+        paginationBar.classList.add('d-none');
+    }
+}
+
+function changePage(delta) {
+    const totalPages = Math.max(1, Math.ceil(filteredCache.length / PAGE_SIZE));
+    const next = currentPage + delta;
+    if (next < 1 || next > totalPages) return;
+    currentPage = next;
+    renderTable(false);
 }
 
 function escapeHtml(text) {
