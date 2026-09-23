@@ -68,41 +68,15 @@
                     </div>
                 </div>
 
-                <!-- Search & Filter -->
-                <div class="row g-3 mb-3">
-                    <div class="col-md-5">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-search"></i></span>
-                            <input type="text" class="form-control" id="searchInput" placeholder="Tìm theo tên..." oninput="renderTable()">
-                        </div>
+                <!-- Search + Calendar -->
+                <div class="search-bar mb-3">
+                    <div class="input-group search-input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Tìm theo tên..." oninput="renderTable()">
                     </div>
-                    <div class="col-md-3">
-                        <select class="form-select" id="filterMonth" onchange="renderTable()">
-                            <option value="">Tất cả tháng</option>
-                            <option value="1">Tháng 1</option>
-                            <option value="2">Tháng 2</option>
-                            <option value="3">Tháng 3</option>
-                            <option value="4">Tháng 4</option>
-                            <option value="5">Tháng 5</option>
-                            <option value="6">Tháng 6</option>
-                            <option value="7">Tháng 7</option>
-                            <option value="8">Tháng 8</option>
-                            <option value="9">Tháng 9</option>
-                            <option value="10">Tháng 10</option>
-                            <option value="11">Tháng 11</option>
-                            <option value="12">Tháng 12</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="d-flex gap-2">
-                            <select class="form-select" id="filterDay" onchange="renderTable()">
-                                <option value="">Tất cả ngày</option>
-                            </select>
-                            <button type="button" class="btn btn-calendar" id="btnCalendar" onclick="openCalendarModal()" title="Xem lịch đóng XU">
-                                <i class="bi bi-calendar3"></i>
-                            </button>
-                        </div>
-                    </div>
+                    <button type="button" class="btn btn-calendar" id="btnCalendar" onclick="openCalendarModal()" title="Xem lịch đóng XU">
+                        <i class="bi bi-calendar3"></i>
+                    </button>
                 </div>
 
                 <!-- Table (desktop) + Cards (mobile) -->

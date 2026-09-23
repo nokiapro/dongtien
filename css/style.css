@@ -703,6 +703,25 @@ body {
 /* ============================================================
    CALENDAR BUTTON & MODAL
    ============================================================ */
+.search-bar {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.search-input-group {
+    flex: 1;
+    min-width: 0;
+}
+
+.search-input-group .form-control {
+    border-radius: 0 12px 12px 0 !important;
+}
+
+.search-input-group .input-group-text {
+    border-radius: 12px 0 0 12px !important;
+}
+
 .btn-calendar {
     width: 46px;
     height: 46px;

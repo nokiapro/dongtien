@@ -180,9 +180,7 @@ function updateStats() {
 // LỊCH ĐÓNG XU
 // ============================================================
 function openCalendarModal() {
-    const fm = document.getElementById('filterMonth').value;
-    if (fm) calMonth = Number(fm);
-    else calMonth = new Date().getMonth() + 1;
+    calMonth = new Date().getMonth() + 1;
     renderCalendar();
     document.getElementById('calDayDetail').classList.add('d-none');
     calendarModal.show();
@@ -273,14 +271,9 @@ function renderTable(resetPage) {
     const emptyState = document.getElementById('emptyState');
     const paginationBar = document.getElementById('paginationBar');
     const search = document.getElementById('searchInput').value.toLowerCase().trim();
-    const filterMonth = document.getElementById('filterMonth').value;
-    const filterDay = document.getElementById('filterDay').value;
 
     filteredCache = data.filter(item => {
-        const matchName = !search || (item.ten || '').toLowerCase().includes(search);
-        const matchMonth = !filterMonth || Number(item.thang) === Number(filterMonth);
-        const matchDay = !filterDay || Number(item.ngay) === Number(filterDay);
-        return matchName && matchMonth && matchDay;
+        return !search || (item.ten || '').toLowerCase().includes(search);
     });
 
     const totalPages = Math.max(1, Math.ceil(filteredCache.length / PAGE_SIZE));
@@ -515,13 +508,6 @@ async function clearAll() {
 // KHỞI TẠO
 // ============================================================
 function init() {
-    const daySelect = document.getElementById('filterDay');
-    for (let i = 1; i <= 31; i++) {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = 'Ngày ' + i;
-        daySelect.appendChild(opt);
-    }
     initFirebase();
 }
 
