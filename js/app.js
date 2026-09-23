@@ -23,10 +23,13 @@ let unsubscribe = null;
 const PAGE_SIZE = 5;
 let currentPage = 1;
 let filteredCache = [];
+let calMonth = new Date().getMonth() + 1;
+let calendarModal = null;
 
 const formModal = new bootstrap.Modal(document.getElementById('formModal'));
 const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
 const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+calendarModal = new bootstrap.Modal(document.getElementById('calendarModal'));
 
 function initFirebase() {
     try {
@@ -171,36 +174,94 @@ function updateStats() {
         .reduce((sum, item) => sum + (Number(item.tienDong) || 0), 0);
     document.getElementById('todayAmount').textContent = formatMoney(todayTotal);
 
-    renderDailyTotals();
 }
 
-function renderDailyTotals() {
-    const container = document.getElementById('dailyTotals');
-    if (data.length === 0) {
-        container.innerHTML = '<p class="text-muted small mb-0">Chưa có dữ liệu</p>';
-        return;
-    }
+// ============================================================
+// LỊCH ĐÓNG XU
+// ============================================================
+function openCalendarModal() {
+    const fm = document.getElementById('filterMonth').value;
+    if (fm) calMonth = Number(fm);
+    else calMonth = new Date().getMonth() + 1;
+    renderCalendar();
+    document.getElementById('calDayDetail').classList.add('d-none');
+    calendarModal.show();
+}
 
-    const groups = {};
+function changeCalMonth(delta) {
+    calMonth += delta;
+    if (calMonth < 1) calMonth = 12;
+    if (calMonth > 12) calMonth = 1;
+    document.getElementById('calDayDetail').classList.add('d-none');
+    renderCalendar();
+}
+
+function getDaysInMonth(month) {
+    // year-less data: use 2024 (leap) for Feb max days
+    return new Date(2024, month, 0).getDate();
+}
+
+function renderCalendar() {
+    document.getElementById('calMonthLabel').textContent = 'Tháng ' + calMonth;
+    const grid = document.getElementById('calGrid');
+    const daysInMonth = getDaysInMonth(calMonth);
+
+    // Map day -> { total, count }
+    const dayMap = {};
     data.forEach(item => {
-        const key = `${item.ngay}/${item.thang}`;
-        if (!groups[key]) {
-            groups[key] = { ngay: item.ngay, thang: item.thang, total: 0 };
-        }
-        groups[key].total += Number(item.tienDong) || 0;
+        if (Number(item.thang) !== calMonth) return;
+        const d = Number(item.ngay);
+        if (!dayMap[d]) dayMap[d] = { total: 0, count: 0 };
+        dayMap[d].total += Number(item.tienDong) || 0;
+        dayMap[d].count += 1;
     });
 
-    const sorted = Object.values(groups).sort((a, b) => {
-        if (b.thang !== a.thang) return b.thang - a.thang;
-        return b.ngay - a.ngay;
-    });
+    // Weekday of day 1 (0=Sun) using 2024 as reference year
+    const startWeekday = new Date(2024, calMonth - 1, 1).getDay();
 
-    container.innerHTML = sorted.map(g => `
-        <div class="daily-item">
-            <span>Ngày ${g.ngay}/${g.thang}</span>
-            <strong class="amount">${formatMoney(g.total)}</strong>
-        </div>
-    `).join('');
+    let html = '';
+    for (let i = 0; i < startWeekday; i++) {
+        html += '<div class="cal-cell empty"></div>';
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+        const has = !!dayMap[d];
+        const cls = 'cal-cell' + (has ? ' has-data' : '');
+        const title = has ? `${dayMap[d].count} người · ${formatMoney(dayMap[d].total)}` : '';
+        html += `<button type="button" class="${cls}" data-day="${d}" title="${title}" onclick="showCalDayDetail(${d})">${d}</button>`;
+    }
+    grid.innerHTML = html;
+}
+
+function showCalDayDetail(day) {
+    const items = data.filter(item => Number(item.thang) === calMonth && Number(item.ngay) === day);
+    const detail = document.getElementById('calDayDetail');
+    const list = document.getElementById('calDetailList');
+    const title = document.getElementById('calDetailTitle');
+    const totalEl = document.getElementById('calDetailTotal');
+
+    // Highlight selected
+    document.querySelectorAll('.cal-cell').forEach(el => el.classList.remove('selected'));
+    const btn = document.querySelector(`.cal-cell[data-day="${day}"]`);
+    if (btn) btn.classList.add('selected');
+
+    title.textContent = `Ngày ${day}/${calMonth}`;
+    const total = items.reduce((s, i) => s + (Number(i.tienDong) || 0), 0);
+    totalEl.textContent = formatMoney(total);
+
+    if (items.length === 0) {
+        list.innerHTML = '<p class="text-muted small mb-0">Chưa có ai đóng XU ngày này.</p>';
+    } else {
+        list.innerHTML = items.map(item => `
+            <div class="cal-detail-item">
+                <div>
+                    <strong>${escapeHtml(item.ten || '')}</strong>
+                    <span class="text-muted small ms-2">${item.gio || '—'}</span>
+                </div>
+                <span class="amount">${formatMoney(item.tienDong)}</span>
+            </div>
+        `).join('');
+    }
+    detail.classList.remove('d-none');
 }
 
 // ============================================================

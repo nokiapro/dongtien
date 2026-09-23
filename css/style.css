@@ -42,12 +42,17 @@ body {
         radial-gradient(ellipse 60% 40% at 50% 90%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
         linear-gradient(160deg, #0f0c29 0%, #1a1440 40%, #24243e 100%);
     background-attachment: fixed;
-    padding: 20px 0 40px;
+    padding: 24px 12px;
     -webkit-font-smoothing: antialiased;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .container {
     max-width: 1080px;
+    width: 100%;
+    margin: 0 auto;
 }
 
 /* ============================================================
@@ -588,7 +593,8 @@ body {
 
 @media (max-width: 767.98px) {
     body {
-        padding: 12px 0 28px;
+        padding: 12px;
+        align-items: flex-start;
     }
 
     .container {
@@ -692,6 +698,154 @@ body {
 .stat-value {
         font-size: 1.05rem;
     }
+}
+
+/* ============================================================
+   CALENDAR BUTTON & MODAL
+   ============================================================ */
+.btn-calendar {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid var(--border-strong);
+    background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.1));
+    color: var(--primary-dark);
+    font-size: 1.2rem;
+    transition: all var(--transition);
+}
+
+.btn-calendar:hover {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    color: #fff;
+    border-color: transparent;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+}
+
+.cal-month-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.cal-month-label {
+    font-weight: 800;
+    font-size: 1.1rem;
+    min-width: 110px;
+    text-align: center;
+    letter-spacing: -0.02em;
+}
+
+.cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.cal-weekdays span {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 4px 0;
+}
+
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.cal-cell {
+    aspect-ratio: 1;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: #f8fafc;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text);
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.cal-cell.empty {
+    background: transparent;
+    cursor: default;
+    pointer-events: none;
+}
+
+.cal-cell:not(.empty):hover {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.cal-cell.has-data {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+    color: #047857;
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.2);
+}
+
+.cal-cell.has-data:hover {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: #059669;
+}
+
+.cal-cell.selected {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%) !important;
+    color: #fff !important;
+    border-color: transparent !important;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+}
+
+.cal-day-detail {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+.cal-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.cal-detail-header strong {
+    font-size: 1rem;
+}
+
+.cal-detail-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.cal-detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
 }
 
 /* ============================================================

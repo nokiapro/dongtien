@@ -68,14 +68,6 @@
                     </div>
                 </div>
 
-                <!-- Tổng XU theo từng ngày -->
-                <div class="daily-total-card">
-                    <h6><i class="bi bi-calendar-day me-1"></i> Tổng XU đã đóng theo ngày</h6>
-                    <div id="dailyTotals">
-                        <p class="text-muted small mb-0">Đang tải...</p>
-                    </div>
-                </div>
-
                 <!-- Search & Filter -->
                 <div class="row g-3 mb-3">
                     <div class="col-md-5">
@@ -102,9 +94,14 @@
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <select class="form-select" id="filterDay" onchange="renderTable()">
-                            <option value="">Tất cả ngày</option>
-                        </select>
+                        <div class="d-flex gap-2">
+                            <select class="form-select" id="filterDay" onchange="renderTable()">
+                                <option value="">Tất cả ngày</option>
+                            </select>
+                            <button type="button" class="btn btn-calendar" id="btnCalendar" onclick="openCalendarModal()" title="Xem lịch đóng XU">
+                                <i class="bi bi-calendar3"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -139,6 +136,36 @@
                     <button type="button" class="btn btn-sm btn-page" id="btnNextPage" onclick="changePage(1)">
                         <i class="bi bi-chevron-right"></i>
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Lịch đóng XU -->
+    <div class="modal fade" id="calendarModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-calendar3 me-2"></i>Lịch đóng XU</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="cal-month-nav">
+                        <button type="button" class="btn btn-sm btn-page" onclick="changeCalMonth(-1)"><i class="bi bi-chevron-left"></i></button>
+                        <span id="calMonthLabel" class="cal-month-label">Tháng 1</span>
+                        <button type="button" class="btn btn-sm btn-page" onclick="changeCalMonth(1)"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                    <div class="cal-weekdays">
+                        <span>CN</span><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span>
+                    </div>
+                    <div id="calGrid" class="cal-grid"></div>
+                    <div id="calDayDetail" class="cal-day-detail d-none">
+                        <div class="cal-detail-header">
+                            <strong id="calDetailTitle">Ngày —</strong>
+                            <span class="amount" id="calDetailTotal">0 XU</span>
+                        </div>
+                        <div id="calDetailList" class="cal-detail-list"></div>
+                    </div>
                 </div>
             </div>
         </div>
