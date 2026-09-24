@@ -992,19 +992,55 @@ body {
     border-color: var(--border);
 }
 
+[data-theme="dark"] .table {
+    --bs-table-bg: #1e1b2e;
+    --bs-table-color: #e2e8f0;
+    --bs-table-border-color: rgba(255,255,255,0.06);
+    --bs-table-striped-bg: #1e1b2e;
+    --bs-table-hover-bg: rgba(99, 102, 241, 0.12);
+    --bs-table-hover-color: #e2e8f0;
+    color: #e2e8f0;
+    background-color: #1e1b2e;
+}
+
+[data-theme="dark"] .table > :not(caption) > * > * {
+    background-color: #1e1b2e;
+    color: #e2e8f0;
+    border-bottom-color: rgba(255,255,255,0.06);
+}
+
 [data-theme="dark"] .table th {
-    background: linear-gradient(180deg, #252238 0%, #1e1b2e 100%);
-    color: var(--text-secondary);
-    border-color: var(--border);
+    background: linear-gradient(180deg, #2a2640 0%, #1e1b2e 100%) !important;
+    color: #94a3b8 !important;
+    border-color: rgba(255,255,255,0.08) !important;
 }
 
 [data-theme="dark"] .table td {
-    border-color: rgba(255,255,255,0.05);
-    color: var(--text);
+    background-color: #1e1b2e !important;
+    border-color: rgba(255,255,255,0.06) !important;
+    color: #e2e8f0 !important;
 }
 
-[data-theme="dark"] .table-hover tbody tr:hover {
-    background: rgba(99, 102, 241, 0.1);
+[data-theme="dark"] .table tbody tr {
+    background-color: #1e1b2e;
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover > * {
+    background-color: rgba(99, 102, 241, 0.12) !important;
+    color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .table strong {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .note-cell {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .amount {
+    color: #34d399;
 }
 
 [data-theme="dark"] .modal-header,
@@ -1013,12 +1049,45 @@ body {
     border-color: var(--border);
 }
 
+[data-theme="dark"] .modal-title {
+    color: #ffffff !important;
+}
+
 [data-theme="dark"] .modal .form-label {
     color: var(--text-secondary);
 }
 
+[data-theme="dark"] .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+[data-theme="dark"] .cal-month-label {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .cal-weekdays span {
+    color: #94a3b8;
+}
+
 [data-theme="dark"] .cal-cell:not(.empty):not(.has-data) {
     background: #252238;
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .cal-cell.has-data {
+    border-color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25) !important;
+}
+
+[data-theme="dark"] .cal-cell.has-data:hover {
+    background: rgba(255, 255, 255, 0.16) !important;
+    border-color: #ffffff !important;
+}
+
+[data-theme="dark"] .cal-detail-header strong {
+    color: #ffffff;
 }
 
 [data-theme="dark"] .search-input-group .form-control,
