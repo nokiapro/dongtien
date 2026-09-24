@@ -1,3 +1,6 @@
+/* ============================================================
+   PREMIUM MODERN UI – Quản lý Tiền Đóng
+   ============================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
@@ -52,6 +55,9 @@ body {
     margin: 0 auto;
 }
 
+/* ============================================================
+   MAIN CARD – Glass panel
+   ============================================================ */
 .main-card {
     background: var(--surface);
     backdrop-filter: blur(24px);
@@ -62,6 +68,9 @@ body {
     border: 1px solid rgba(255,255,255,0.35);
 }
 
+/* ============================================================
+   HEADER
+   ============================================================ */
 .header-section {
     background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #a855f7 100%);
     color: #fff;
@@ -130,6 +139,9 @@ body {
     color: #fff;
 }
 
+/* ============================================================
+   STATS – Premium cards
+   ============================================================ */
 .stats-bar {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -207,6 +219,9 @@ body {
     letter-spacing: 0.04em;
 }
 
+/* ============================================================
+   DAILY TOTALS
+   ============================================================ */
 .daily-total-card {
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
     border: 1px solid rgba(16, 185, 129, 0.25);
@@ -239,6 +254,9 @@ body {
     padding-bottom: 0;
 }
 
+/* ============================================================
+   SEARCH & FILTERS
+   ============================================================ */
 .input-group-text {
     background: #f8fafc;
     border-color: var(--border-strong);
@@ -271,6 +289,9 @@ body {
     font-size: 0.875rem;
 }
 
+/* ============================================================
+   TABLE
+   ============================================================ */
 .table-container {
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
@@ -340,6 +361,9 @@ body {
     transform: scale(1.08);
 }
 
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
 .empty-state {
     text-align: center;
     padding: 64px 20px;
@@ -350,6 +374,9 @@ body {
     opacity: 0.4;
 }
 
+/* ============================================================
+   ADMIN BADGE
+   ============================================================ */
 .admin-badge {
     background: rgba(255, 255, 255, 0.2);
     color: #fff;
@@ -362,6 +389,9 @@ body {
     backdrop-filter: blur(8px);
 }
 
+/* ============================================================
+   MODALS
+   ============================================================ */
 .modal-content {
     border: none;
     border-radius: 18px;
@@ -419,6 +449,9 @@ body {
     font-weight: 600;
 }
 
+/* ============================================================
+   LOADING
+   ============================================================ */
 .loading-overlay {
     position: fixed;
     inset: 0;
@@ -437,10 +470,16 @@ body {
     color: #a5b4fc !important;
 }
 
+/* ============================================================
+   UTILITIES
+   ============================================================ */
 .hidden {
     display: none !important;
 }
 
+/* ============================================================
+   MOBILE CARDS
+   ============================================================ */
 .mobile-cards {
     display: flex;
     flex-direction: column;
@@ -531,12 +570,18 @@ body {
     padding: 8px;
 }
 
+/* ============================================================
+   FOOTER TEXT
+   ============================================================ */
 .container > p.text-center {
     color: rgba(255,255,255,0.55) !important;
     font-weight: 500;
     letter-spacing: 0.02em;
 }
 
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
 @media (max-width: 991.98px) {
     .header-section {
         padding: 18px 20px;
@@ -655,6 +700,9 @@ body {
     }
 }
 
+/* ============================================================
+   CALENDAR BUTTON & MODAL
+   ============================================================ */
 .search-bar {
     display: flex;
     align-items: stretch;
@@ -819,6 +867,9 @@ body {
     font-size: 0.9rem;
 }
 
+/* ============================================================
+   PAGINATION
+   ============================================================ */
 .pagination-bar {
     display: flex;
     align-items: center;
@@ -866,6 +917,7 @@ body {
     box-shadow: none;
 }
 
+/* Header clear button */
 #btnClearAllHeader {
     border: 1.5px solid rgba(255, 255, 255, 0.45);
     background: rgba(239, 68, 68, 0.2);
@@ -878,6 +930,9 @@ body {
     color: #fff;
 }
 
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
 .table-container::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -892,4 +947,186 @@ body {
 }
 .table-container::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+}
+
+/* ============================================================
+   DARK THEME
+   ============================================================ */
+[data-theme="dark"] {
+    --text: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --border: rgba(148, 163, 184, 0.15);
+    --border-strong: rgba(148, 163, 184, 0.28);
+    --surface: rgba(30, 27, 46, 0.92);
+    --surface-solid: #1e1b2e;
+}
+
+[data-theme="dark"] body {
+    background: #0a0818;
+    background-image:
+        radial-gradient(ellipse 80% 60% at 10% 20%, rgba(99, 102, 241, 0.35) 0%, transparent 50%),
+        radial-gradient(ellipse 70% 50% at 90% 10%, rgba(168, 85, 247, 0.25) 0%, transparent 45%),
+        radial-gradient(ellipse 60% 40% at 50% 90%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
+        linear-gradient(160deg, #0a0818 0%, #12101f 40%, #1a1830 100%);
+}
+
+[data-theme="dark"] .main-card {
+    background: var(--surface);
+    border-color: rgba(255,255,255,0.08);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+
+[data-theme="dark"] .stat-item,
+[data-theme="dark"] .table-container,
+[data-theme="dark"] .mobile-card,
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .input-group-text,
+[data-theme="dark"] .btn-page,
+[data-theme="dark"] .cal-cell,
+[data-theme="dark"] .cal-detail-item,
+[data-theme="dark"] .modal-content {
+    background: var(--surface-solid);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .table th {
+    background: linear-gradient(180deg, #252238 0%, #1e1b2e 100%);
+    color: var(--text-secondary);
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .table td {
+    border-color: rgba(255,255,255,0.05);
+    color: var(--text);
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+[data-theme="dark"] .modal-header,
+[data-theme="dark"] .modal-footer {
+    background: #252238;
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .modal .form-label {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .cal-cell:not(.empty):not(.has-data) {
+    background: #252238;
+}
+
+[data-theme="dark"] .search-input-group .form-control,
+[data-theme="dark"] .search-input-group .input-group-text {
+    background: var(--surface-solid);
+    color: var(--text);
+    border-color: var(--border-strong);
+}
+
+[data-theme="dark"] .page-info {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .stat-value {
+    color: #a5b4fc;
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 360px;
+    pointer-events: none;
+}
+
+.app-toast {
+    background: #fff;
+    color: #0f172a;
+    padding: 14px 18px;
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.18);
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transform: translateX(40px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 4px solid #6366f1;
+    pointer-events: auto;
+}
+
+.app-toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.app-toast.toast-success {
+    border-left-color: #10b981;
+}
+
+.app-toast.toast-success .bi {
+    color: #10b981;
+}
+
+[data-theme="dark"] .app-toast {
+    background: #1e1b2e;
+    color: #e2e8f0;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+}
+
+/* ============================================================
+   ROLE BADGE & NOTES
+   ============================================================ */
+.role-pill {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.role-pill.role-admin {
+    background: rgba(239, 68, 68, 0.25);
+    color: #fecaca;
+}
+
+.role-pill.role-editor {
+    background: rgba(59, 130, 246, 0.25);
+    color: #bfdbfe;
+}
+
+.note-cell {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+#btnTheme {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
 }
