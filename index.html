@@ -22,13 +22,13 @@
     <div class="container">
         <div class="main-card">
             <!-- Header -->
-            <div class="header-section d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div>
+            <div class="header-section">
+                <div class="header-brand">
                     <h1 class="h3 mb-1"><i class="bi bi-cash-coin me-2"></i>Quản lý XU Đóng</h1>
-                    <p class="mb-0 opacity-75">Theo dõi tên · ngày · giờ · tháng · năm · XU</p>
+                    <p class="mb-0 header-sub">Theo dõi tên · ngày · giờ · tháng · năm · XU</p>
                 </div>
-                <div class="d-flex align-items-center gap-2 flex-wrap">
-                    <button type="button" class="btn btn-outline-light btn-sm" id="btnTheme" onclick="toggleTheme()" title="Đổi giao diện">
+                <div class="header-actions">
+                    <button type="button" class="btn header-btn" id="btnTheme" onclick="toggleTheme()" title="Đổi giao diện">
                         <i class="bi bi-moon-stars" id="themeIcon"></i>
                     </button>
                     <span id="adminBadge" class="admin-badge hidden">
@@ -36,23 +36,23 @@
                         <span id="adminEmail"></span>
                         <span id="roleBadge" class="role-pill"></span>
                     </span>
-                    <button id="btnAdd" class="btn btn-light btn-lg hidden" data-bs-toggle="modal" data-bs-target="#formModal" onclick="openAddModal()">
+                    <button id="btnAdd" class="btn header-btn hidden" data-bs-toggle="modal" data-bs-target="#formModal" onclick="openAddModal()">
                         <i class="bi bi-plus-lg me-1"></i> Thêm mới
                     </button>
-                    <button id="btnBackup" class="btn btn-outline-light btn-sm hidden" onclick="exportBackup()" title="Sao lưu dữ liệu">
+                    <button id="btnBackup" class="btn header-btn hidden" onclick="exportBackup()" title="Sao lưu dữ liệu">
                         <i class="bi bi-download me-1"></i> Sao lưu
                     </button>
-                    <button id="btnRestore" class="btn btn-outline-light btn-sm hidden" onclick="document.getElementById('importFile').click()" title="Khôi phục dữ liệu">
+                    <button id="btnRestore" class="btn header-btn hidden" onclick="document.getElementById('importFile').click()" title="Khôi phục dữ liệu">
                         <i class="bi bi-upload me-1"></i> Khôi phục
                     </button>
                     <input type="file" id="importFile" accept=".json,application/json" class="d-none" onchange="importBackup(event)">
-                    <button id="btnClearAllHeader" class="btn btn-outline-light btn-sm hidden" onclick="clearAll()" title="Xóa toàn bộ dữ liệu">
+                    <button id="btnClearAllHeader" class="btn header-btn hidden" onclick="clearAll()" title="Xóa toàn bộ dữ liệu">
                         <i class="bi bi-trash3 me-1"></i> Xóa hết
                     </button>
-                    <button id="btnLogin" class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    <button id="btnLogin" class="btn header-btn" data-bs-toggle="modal" data-bs-target="#loginModal">
                         <i class="bi bi-shield-lock me-1"></i> Đăng nhập
                     </button>
-                    <button id="btnLogout" class="btn btn-outline-light btn-sm hidden" onclick="doLogout()">
+                    <button id="btnLogout" class="btn header-btn hidden" onclick="doLogout()">
                         <i class="bi bi-box-arrow-left me-1"></i> Đăng xuất
                     </button>
                 </div>

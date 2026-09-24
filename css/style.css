@@ -72,21 +72,19 @@ body {
    HEADER
    ============================================================ */
 .header-section {
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #a855f7 100%);
-    color: #fff;
+    background: #f8fafc;
+    color: var(--text);
     padding: 22px 28px;
-    position: relative;
-    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
 }
 
-.header-section::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.12) 0%, transparent 40%),
-        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 35%);
-    pointer-events: none;
+.header-brand {
+    text-align: center;
 }
 
 .header-section h1 {
@@ -94,49 +92,115 @@ body {
     letter-spacing: -0.03em;
     font-size: 1.4rem;
     margin: 0;
-    position: relative;
+    color: var(--text);
 }
 
-.header-section p {
+.header-sub {
     font-size: 0.88rem;
-    opacity: 0.85;
     margin: 4px 0 0;
-    position: relative;
     font-weight: 500;
+    color: var(--text-secondary);
 }
 
-.header-section .btn {
-    border-radius: 12px;
+.header-actions {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 2px;
+}
+
+/* Unified header buttons */
+.header-btn {
+    border-radius: 999px !important;
+    font-weight: 600 !important;
+    font-size: 0.84rem !important;
+    padding: 8px 16px !important;
+    line-height: 1.25 !important;
+    white-space: nowrap;
+    border: 1.5px solid var(--border-strong) !important;
+    background: transparent !important;
+    color: var(--text) !important;
+    box-shadow: none !important;
+    transition: all var(--transition) !important;
+}
+
+.header-btn:hover,
+.header-btn:focus {
+    background: rgba(99, 102, 241, 0.1) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary-dark) !important;
+    transform: translateY(-1px);
+}
+
+#btnTheme.header-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    color: var(--text);
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 999px;
     font-weight: 600;
-    font-size: 0.875rem;
-    transition: all var(--transition);
-    position: relative;
+    white-space: nowrap;
+    border: 1.5px solid var(--border-strong);
 }
 
-.header-section .btn-light {
-    background: #fff;
-    color: var(--primary-dark);
+.role-pill.role-admin {
+    background: #ef4444 !important;
+    color: #fff !important;
     border: none;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
 }
 
-.header-section .btn-light:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    background: #fff;
-    color: var(--primary-dark);
+.role-pill.role-editor {
+    background: #3b82f6 !important;
+    color: #fff !important;
 }
 
-.header-section .btn-outline-light {
-    border: 1.5px solid rgba(255,255,255,0.5);
-    color: #fff;
-    background: rgba(255,255,255,0.08);
+/* Dark header */
+[data-theme="dark"] .header-section {
+    background: #16132a;
+    border-bottom-color: rgba(255,255,255,0.08);
+    color: #e2e8f0;
 }
 
-.header-section .btn-outline-light:hover {
-    background: rgba(255,255,255,0.2);
-    border-color: #fff;
-    color: #fff;
+[data-theme="dark"] .header-section h1 {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .header-sub {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .header-btn {
+    border-color: rgba(148, 163, 184, 0.35) !important;
+    color: #e2e8f0 !important;
+    background: transparent !important;
+}
+
+[data-theme="dark"] .header-btn:hover,
+[data-theme="dark"] .header-btn:focus {
+    background: rgba(99, 102, 241, 0.2) !important;
+    border-color: #818cf8 !important;
+    color: #c7d2fe !important;
+}
+
+[data-theme="dark"] .admin-badge {
+    color: #e2e8f0;
+    border-color: rgba(148, 163, 184, 0.35);
 }
 
 /* ============================================================
@@ -377,17 +441,6 @@ body {
 /* ============================================================
    ADMIN BADGE
    ============================================================ */
-.admin-badge {
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    font-size: 0.78rem;
-    padding: 5px 14px;
-    border-radius: 999px;
-    font-weight: 600;
-    white-space: nowrap;
-    border: 1px solid rgba(255,255,255,0.3);
-    backdrop-filter: blur(8px);
-}
 
 /* ============================================================
    MODALS
@@ -607,28 +660,22 @@ body {
     }
 
     .header-section {
-        padding: 18px 16px;
-        flex-direction: column;
-        align-items: stretch !important;
-        gap: 14px !important;
-    }
-
-    .header-section > div:first-child {
-        text-align: center;
-    }
-
-    .header-section > div:last-child {
-        justify-content: center;
-        flex-wrap: wrap;
+        padding: 16px;
+        gap: 12px;
     }
 
     .header-section h1 {
         font-size: 1.15rem;
     }
 
-    .header-section .btn-lg {
-        font-size: 0.9rem;
-        padding: 9px 18px;
+    .header-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .header-btn {
+        font-size: 0.8rem !important;
+        padding: 7px 12px !important;
     }
 
     .p-4 {
@@ -917,18 +964,6 @@ body {
     box-shadow: none;
 }
 
-/* Header clear button */
-#btnClearAllHeader {
-    border: 1.5px solid rgba(255, 255, 255, 0.45);
-    background: rgba(239, 68, 68, 0.2);
-    color: #fff;
-}
-
-#btnClearAllHeader:hover {
-    background: rgba(239, 68, 68, 0.45);
-    border-color: #fff;
-    color: #fff;
-}
 
 /* ============================================================
    SCROLLBAR
@@ -1171,13 +1206,13 @@ body {
 }
 
 .role-pill.role-admin {
-    background: rgba(239, 68, 68, 0.25);
-    color: #fecaca;
+    background: #ef4444 !important;
+    color: #ffffff !important;
 }
 
 .role-pill.role-editor {
-    background: rgba(59, 130, 246, 0.25);
-    color: #bfdbfe;
+    background: #3b82f6 !important;
+    color: #ffffff !important;
 }
 
 .note-cell {
