@@ -1,6 +1,3 @@
-// ============================================================
-// FIREBASE CONFIG
-// ============================================================
 const firebaseConfig = {
     apiKey: "AIzaSyC1Kr7F-VabqWhw6YdZ7nI0f4yWXzNtWoA",
     authDomain: "dongtien-39b49.firebaseapp.com",
@@ -11,13 +8,10 @@ const firebaseConfig = {
     appId: "1:609298110570:web:623ca8cfce1edc8ad6d213"
 };
 
-// ============================================================
-// STATE
-// ============================================================
 let app, auth, db;
 let data = [];
 let currentUser = null;
-let userRole = 'guest'; // guest | editor | admin
+let userRole = 'guest';
 let deleteId = null;
 let unsubscribe = null;
 const PAGE_SIZE = 5;
@@ -45,16 +39,13 @@ function itemYear(item) {
     return Number(item.nam) || new Date().getFullYear();
 }
 
-// ============================================================
-// THEME
-// ============================================================
 function initTheme() {
-    const saved = localStorage.getItem('xu_theme') || 'light';
+    const saved = localStorage.getItem('Xu_theme') || 'light';
     applyTheme(saved);
 }
 function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('xu_theme', theme);
+    localStorage.setItem('Xu_theme', theme);
     const icon = document.getElementById('themeIcon');
     if (icon) icon.className = theme === 'dark' ? 'bi bi-sun' : 'bi bi-moon-stars';
 }
@@ -63,9 +54,6 @@ function toggleTheme() {
     applyTheme(cur === 'dark' ? 'light' : 'dark');
 }
 
-// ============================================================
-// TOAST / NOTIFICATIONS
-// ============================================================
 function showToast(message, type) {
     const container = document.getElementById('toastContainer');
     if (!container) return;
@@ -80,9 +68,6 @@ function showToast(message, type) {
     }, 4000);
 }
 
-// ============================================================
-// FIREBASE
-// ============================================================
 function initFirebase() {
     try {
         app = firebase.initializeApp(firebaseConfig);
@@ -113,7 +98,6 @@ function initFirebase() {
                     }
                     knownIds.add(doc.id);
                 });
-                // remove deleted from knownIds
                 const currentIds = new Set(data.map(d => d.id));
                 knownIds.forEach(id => {
                     if (!currentIds.has(id)) knownIds.delete(id);
@@ -150,7 +134,6 @@ async function resolveUserRole(user) {
             userRole = snap.data().role === 'admin' ? 'admin' : 'editor';
             return;
         }
-        // First user ever becomes admin; others default to editor
         const admins = await db.collection('users').where('role', '==', 'admin').limit(1).get();
         const role = admins.empty ? 'admin' : 'editor';
         await ref.set({
@@ -164,14 +147,10 @@ async function resolveUserRole(user) {
         }
     } catch (e) {
         console.error('resolveUserRole', e);
-        // Fallback: treat logged-in as editor if rules block users collection
         userRole = 'editor';
     }
 }
 
-// ============================================================
-// UI ROLE
-// ============================================================
 function updateAdminUI() {
     const editorEls = [
         document.getElementById('btnAdd'),
@@ -214,9 +193,6 @@ function updateAdminUI() {
     renderTable();
 }
 
-// ============================================================
-// AUTH
-// ============================================================
 async function doLogin() {
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPass').value;
@@ -266,12 +242,9 @@ document.getElementById('loginPass').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') doLogin();
 });
 
-// ============================================================
-// STATS
-// ============================================================
 function formatMoney(amount) {
     const n = Number(amount) || 0;
-    return new Intl.NumberFormat('vi-VN').format(n) + ' XU';
+    return new Intl.NumberFormat('vi-VN').format(n) + ' Xu';
 }
 
 function updateStats() {
@@ -295,9 +268,6 @@ function updateStats() {
     document.getElementById('todayAmount').textContent = formatMoney(todayTotal);
 }
 
-// ============================================================
-// CALENDAR
-// ============================================================
 function openCalendarModal() {
     calMonth = new Date().getMonth() + 1;
     calYear = new Date().getFullYear();
@@ -367,7 +337,7 @@ function showCalDayDetail(day) {
     totalEl.textContent = formatMoney(total);
 
     if (items.length === 0) {
-        list.innerHTML = '<p class="text-muted small mb-0">Chưa có ai đóng XU ngày này.</p>';
+        list.innerHTML = '<p class="text-muted small mb-0">Chưa có ai đóng Xu ngày này.</p>';
     } else {
         list.innerHTML = items.map(item => `
             <div class="cal-detail-item">
@@ -383,9 +353,6 @@ function showCalDayDetail(day) {
     detail.classList.remove('d-none');
 }
 
-// ============================================================
-// TABLE
-// ============================================================
 function renderTable(resetPage) {
     const tbody = document.getElementById('tableBody');
     const mobileCards = document.getElementById('mobileCards');
@@ -509,9 +476,6 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// ============================================================
-// GIỜ 24H
-// ============================================================
 function pad2(n) {
     return String(n).padStart(2, '0');
 }
@@ -547,7 +511,6 @@ function setGioValue(value) {
     sec.value = '';
     if (!value) return;
 
-    // Accept "HH:MM:SS", "HH:MM", or with AM/PM
     let str = String(value).trim();
     let isPM = /pm|ch/i.test(str);
     let isAM = /am|sa/i.test(str);
@@ -571,7 +534,6 @@ function setGioValue(value) {
 
 function formatGioDisplay(value) {
     if (!value) return '—';
-    // Normalize any legacy AM/PM to 24h for display
     let str = String(value).trim();
     let isPM = /pm|ch/i.test(str);
     let isAM = /am|sa/i.test(str);
@@ -587,9 +549,6 @@ function formatGioDisplay(value) {
     return se !== null ? `${pad2(h)}:${mi}:${se}` : `${pad2(h)}:${mi}`;
 }
 
-// ============================================================
-// CRUD
-// ============================================================
 function openAddModal() {
     if (!canEdit()) return;
     document.getElementById('modalTitle').textContent = 'Thêm bản ghi mới';
@@ -710,9 +669,6 @@ async function clearAll() {
     }
 }
 
-// ============================================================
-// BACKUP / RESTORE
-// ============================================================
 function exportBackup() {
     if (!canAdmin()) return;
     const payload = {
@@ -720,7 +676,6 @@ function exportBackup() {
         version: 1,
         records: data.map(({ id, ...rest }) => {
             const copy = { id, ...rest };
-            // strip Firestore timestamps for clean JSON
             if (copy.createdAt && copy.createdAt.toDate) copy.createdAt = copy.createdAt.toDate().toISOString();
             if (copy.updatedAt && copy.updatedAt.toDate) copy.updatedAt = copy.updatedAt.toDate().toISOString();
             return copy;
@@ -730,7 +685,7 @@ function exportBackup() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `xu-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `Xu-backup-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     showToast('Đã tải file sao lưu', 'success');
@@ -789,9 +744,6 @@ async function importBackup(event) {
     }
 }
 
-// ============================================================
-// INIT
-// ============================================================
 function init() {
     initTheme();
     initTimeSelects();
