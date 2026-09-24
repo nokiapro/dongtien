@@ -373,7 +373,7 @@ function showCalDayDetail(day) {
             <div class="cal-detail-item">
                 <div>
                     <strong>${escapeHtml(item.ten || '')}</strong>
-                    <span class="text-muted small ms-2">${item.gio || '—'}</span>
+                    <span class="text-muted small ms-2">${formatGioDisplay(item.gio)}</span>
                     ${item.ghiChu ? `<div class="small text-muted">${escapeHtml(item.ghiChu)}</div>` : ''}
                 </div>
                 <span class="amount">${formatMoney(item.tienDong)}</span>
@@ -436,7 +436,7 @@ function renderTable(resetPage) {
                 <td>${rowNum}</td>
                 <td><strong>${escapeHtml(item.ten || '')}</strong></td>
                 <td>${item.ngay}</td>
-                <td>${item.gio || '—'}</td>
+                <td>${formatGioDisplay(item.gio)}</td>
                 <td><span class="badge bg-primary">${item.thang}/${itemYear(item)}</span></td>
                 <td class="amount">${formatMoney(item.tienDong)}</td>
                 <td class="note-cell" title="${note}">${note}</td>
@@ -472,7 +472,7 @@ function renderTable(resetPage) {
                     </div>
                     <div class="mobile-card-row">
                         <span class="label"><i class="bi bi-clock me-1"></i>Giờ</span>
-                        <span>${item.gio || '—'}</span>
+                        <span>${formatGioDisplay(item.gio)}</span>
                     </div>
                     ${item.ghiChu ? `
                     <div class="mobile-card-row">
@@ -510,6 +510,84 @@ function escapeHtml(text) {
 }
 
 // ============================================================
+// GIỜ 24H
+// ============================================================
+function pad2(n) {
+    return String(n).padStart(2, '0');
+}
+
+function initTimeSelects() {
+    const hour = document.getElementById('gioHour');
+    const min = document.getElementById('gioMin');
+    const sec = document.getElementById('gioSec');
+    if (!hour || hour.options.length) return;
+
+    hour.innerHTML = '<option value="">--</option>' +
+        Array.from({ length: 24 }, (_, i) => `<option value="${pad2(i)}">${pad2(i)}</option>`).join('');
+    min.innerHTML = '<option value="">--</option>' +
+        Array.from({ length: 60 }, (_, i) => `<option value="${pad2(i)}">${pad2(i)}</option>`).join('');
+    sec.innerHTML = '<option value="">--</option>' +
+        Array.from({ length: 60 }, (_, i) => `<option value="${pad2(i)}">${pad2(i)}</option>`).join('');
+}
+
+function getGioValue() {
+    const h = document.getElementById('gioHour').value;
+    const m = document.getElementById('gioMin').value;
+    const s = document.getElementById('gioSec').value;
+    if (h === '' && m === '' && s === '') return '';
+    return `${h || '00'}:${m || '00'}:${s || '00'}`;
+}
+
+function setGioValue(value) {
+    const hour = document.getElementById('gioHour');
+    const min = document.getElementById('gioMin');
+    const sec = document.getElementById('gioSec');
+    hour.value = '';
+    min.value = '';
+    sec.value = '';
+    if (!value) return;
+
+    // Accept "HH:MM:SS", "HH:MM", or with AM/PM
+    let str = String(value).trim();
+    let isPM = /pm|ch/i.test(str);
+    let isAM = /am|sa/i.test(str);
+    str = str.replace(/\s*(am|pm|sa|ch)\.?/ig, '').trim();
+
+    const parts = str.split(':').map(p => parseInt(p, 10));
+    if (!parts.length || isNaN(parts[0])) return;
+
+    let h = parts[0] || 0;
+    const mi = parts[1] || 0;
+    const se = parts[2] || 0;
+
+    if (isPM && h < 12) h += 12;
+    if (isAM && h === 12) h = 0;
+    if (h > 23) h = h % 24;
+
+    hour.value = pad2(h);
+    min.value = pad2(Math.min(59, Math.max(0, mi)));
+    sec.value = pad2(Math.min(59, Math.max(0, se)));
+}
+
+function formatGioDisplay(value) {
+    if (!value) return '—';
+    // Normalize any legacy AM/PM to 24h for display
+    let str = String(value).trim();
+    let isPM = /pm|ch/i.test(str);
+    let isAM = /am|sa/i.test(str);
+    str = str.replace(/\s*(am|pm|sa|ch)\.?/ig, '').trim();
+    const parts = str.split(':');
+    if (!parts.length) return '—';
+    let h = parseInt(parts[0], 10);
+    if (isNaN(h)) return escapeHtml(str);
+    if (isPM && h < 12) h += 12;
+    if (isAM && h === 12) h = 0;
+    const mi = parts[1] !== undefined ? pad2(parseInt(parts[1], 10) || 0) : '00';
+    const se = parts[2] !== undefined ? pad2(parseInt(parts[2], 10) || 0) : null;
+    return se !== null ? `${pad2(h)}:${mi}:${se}` : `${pad2(h)}:${mi}`;
+}
+
+// ============================================================
 // CRUD
 // ============================================================
 function openAddModal() {
@@ -521,6 +599,7 @@ function openAddModal() {
     document.getElementById('thang').value = now.getMonth() + 1;
     document.getElementById('ngay').value = now.getDate();
     document.getElementById('nam').value = now.getFullYear();
+    setGioValue(`${pad2(now.getHours())}:${pad2(now.getMinutes())}:${pad2(now.getSeconds())}`);
 }
 
 function openEditModal(id) {
@@ -532,7 +611,7 @@ function openEditModal(id) {
     document.getElementById('editId').value = item.id;
     document.getElementById('ten').value = item.ten || '';
     document.getElementById('ngay').value = item.ngay;
-    document.getElementById('gio').value = item.gio || '';
+    setGioValue(item.gio || '');
     document.getElementById('thang').value = item.thang;
     document.getElementById('nam').value = itemYear(item);
     document.getElementById('tienDong').value = item.tienDong;
@@ -553,7 +632,7 @@ async function saveData() {
     const payload = {
         ten: document.getElementById('ten').value.trim(),
         ngay: parseInt(document.getElementById('ngay').value),
-        gio: document.getElementById('gio').value || '',
+        gio: getGioValue(),
         thang: parseInt(document.getElementById('thang').value),
         nam: parseInt(document.getElementById('nam').value),
         tienDong: parseInt(document.getElementById('tienDong').value),
@@ -715,6 +794,7 @@ async function importBackup(event) {
 // ============================================================
 function init() {
     initTheme();
+    initTimeSelects();
     initFirebase();
 }
 

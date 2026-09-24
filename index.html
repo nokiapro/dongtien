@@ -235,8 +235,15 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Giờ</label>
-                            <input type="time" class="form-control" id="gio" step="1">
+                            <label class="form-label">Giờ <span class="text-muted fw-normal">(24h)</span></label>
+                            <div class="time-24h-group">
+                                <select class="form-select" id="gioHour" aria-label="Giờ"></select>
+                                <span class="time-sep">:</span>
+                                <select class="form-select" id="gioMin" aria-label="Phút"></select>
+                                <span class="time-sep">:</span>
+                                <select class="form-select" id="gioSec" aria-label="Giây"></select>
+                            </div>
+                            <div class="form-text">Định dạng 24 giờ (00–23), không dùng SA/CH</div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">XU đóng <span class="text-danger">*</span></label>

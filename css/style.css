@@ -1488,3 +1488,43 @@ input[type="time"].form-control {
         padding-right: 8px;
     }
 }
+
+
+/* ============================================================
+   TIME 24H SELECTS
+   ============================================================ */
+.time-24h-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.time-24h-group .form-select {
+    flex: 1;
+    text-align: center;
+    text-align-last: center;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 0;
+}
+
+.time-sep {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.form-text {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+[data-theme="dark"] .time-sep {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .form-text {
+    color: #64748b;
+}
