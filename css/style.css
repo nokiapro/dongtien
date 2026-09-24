@@ -1528,3 +1528,138 @@ input[type="time"].form-control {
 [data-theme="dark"] .form-text {
     color: #64748b;
 }
+
+/* ============================================================
+   DROPDOWN (SELECT) – khung đẹp hơn
+   ============================================================ */
+.form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: var(--surface-solid);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 6.646a.5.5 0 0 1 .708 0L8 9.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 12px;
+    padding: 10px 40px 10px 14px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    cursor: pointer;
+}
+
+.form-select:hover {
+    border-color: var(--primary-light);
+}
+
+.form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+    background-color: var(--surface-solid);
+    color: var(--text);
+    outline: none;
+}
+
+.form-select option {
+    font-weight: 500;
+    padding: 10px 12px;
+    background: #fff;
+    color: #0f172a;
+}
+
+/* Time 24h selects – compact & balanced */
+.time-24h-group .form-select {
+    padding: 10px 28px 10px 8px;
+    background-position: right 8px center;
+    background-size: 14px;
+    border-radius: 10px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+}
+
+[data-theme="dark"] .form-select {
+    background-color: #252238 !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 6.646a.5.5 0 0 1 .708 0L8 9.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 12px center !important;
+    border-color: rgba(148, 163, 184, 0.28) !important;
+    color: #e2e8f0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .form-select:hover {
+    border-color: #818cf8 !important;
+}
+
+[data-theme="dark"] .form-select:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25) !important;
+}
+
+[data-theme="dark"] .form-select option {
+    background: #1e1b2e;
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .time-24h-group .form-select {
+    background-position: right 8px center !important;
+}
+
+/* ============================================================
+   SCROLLBAR – đẹp toàn web
+   ============================================================ */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #94a3b8 transparent;
+}
+
+[data-theme="dark"] * {
+    scrollbar-color: #475569 transparent;
+}
+
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #64748b 0%, #475569 100%);
+    background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+[data-theme="dark"] *::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #475569 0%, #334155 100%);
+    background-clip: padding-box;
+}
+
+[data-theme="dark"] *::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #64748b 0%, #475569 100%);
+    background-clip: padding-box;
+}
+
+/* Vùng cuộn trong modal / chi tiết lịch */
+.cal-detail-list,
+.modal-body,
+.table-container {
+    scrollbar-gutter: stable;
+}
