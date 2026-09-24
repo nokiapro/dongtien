@@ -1199,3 +1199,292 @@ body {
     justify-content: center;
     border-radius: 10px;
 }
+
+/* ============================================================
+   NUMBER INPUT SPINNERS (đẹp hơn)
+   ============================================================ */
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+    opacity: 1;
+    height: auto;
+}
+
+/* Custom spinner wrapper look via background buttons area */
+input[type="number"].form-control {
+    background-image:
+        linear-gradient(var(--border), var(--border)),
+        linear-gradient(var(--border), var(--border));
+    background-position:
+        calc(100% - 12px) calc(50% - 4px),
+        calc(100% - 12px) calc(50% + 4px);
+    background-size: 8px 1.5px, 8px 1.5px;
+    background-repeat: no-repeat;
+    padding-right: 36px;
+    /* Keep native spinner clickable but styled */
+}
+
+/* Re-enable webkit spinners with custom styling */
+input[type="number"].form-control::-webkit-inner-spin-button,
+input[type="number"].form-control::-webkit-outer-spin-button {
+    -webkit-appearance: inner-spin-button;
+    appearance: auto;
+    opacity: 1;
+    width: 22px;
+    height: 100%;
+    cursor: pointer;
+    background: transparent;
+    margin: 0;
+    border-left: 1px solid var(--border);
+}
+
+/* Firefox */
+input[type="number"].form-control {
+    -moz-appearance: number-input;
+}
+
+/* Cleaner approach: styled spinner track */
+.form-control[type="number"] {
+    position: relative;
+}
+
+/* Dark/light unified spinner chrome */
+input[type="number"]::-webkit-inner-spin-button {
+    filter: none;
+}
+
+[data-theme="dark"] input[type="number"]::-webkit-inner-spin-button {
+    filter: invert(0.85);
+}
+
+/* ============================================================
+   THEME TEXT / SURFACE FIXES (toàn web)
+   ============================================================ */
+.form-control,
+.form-select {
+    color: var(--text);
+    background-color: var(--surface-solid);
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
+    opacity: 0.85;
+}
+
+.form-control:focus,
+.form-select:focus {
+    color: var(--text);
+    background-color: var(--surface-solid);
+}
+
+.modal-body {
+    color: var(--text);
+    background: var(--surface-solid);
+}
+
+.modal-content {
+    background: var(--surface-solid);
+    color: var(--text);
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.modal .small.text-muted,
+.modal p.small {
+    color: var(--text-muted) !important;
+}
+
+.empty-state {
+    color: var(--text-muted);
+}
+
+.stat-label {
+    color: var(--text-secondary);
+}
+
+.page-info {
+    color: var(--text-secondary);
+}
+
+.cal-month-label {
+    color: var(--text);
+}
+
+.cal-detail-header strong {
+    color: var(--text);
+}
+
+.mobile-card-name {
+    color: var(--text);
+}
+
+.mobile-card-row {
+    color: var(--text);
+}
+
+/* Light modal header/footer use soft gray; dark overrides below */
+.modal-header {
+    background: linear-gradient(180deg, #fafbfc 0%, #fff 100%);
+    color: var(--text);
+}
+
+.modal-footer {
+    background: #fafbfc;
+}
+
+[data-theme="dark"] .modal-header {
+    background: #252238 !important;
+    color: #fff;
+}
+
+[data-theme="dark"] .modal-footer {
+    background: #252238 !important;
+}
+
+[data-theme="dark"] .modal-body {
+    background: #1e1b2e !important;
+    color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: #252238 !important;
+    color: #e2e8f0 !important;
+    border-color: rgba(148, 163, 184, 0.28) !important;
+}
+
+[data-theme="dark"] .form-control::placeholder {
+    color: #64748b !important;
+}
+
+[data-theme="dark"] .input-group-text {
+    background: #252238 !important;
+    color: #94a3b8 !important;
+    border-color: rgba(148, 163, 184, 0.28) !important;
+}
+
+[data-theme="dark"] .btn-secondary {
+    background: #334155;
+    border-color: #475569;
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .btn-secondary:hover {
+    background: #475569;
+    color: #fff;
+}
+
+[data-theme="dark"] .alert-danger {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.35);
+    color: #fecaca;
+}
+
+[data-theme="dark"] .stat-item {
+    background: #1e1b2e;
+}
+
+[data-theme="dark"] .stat-label {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .stat-icon {
+    background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(168,85,247,0.2));
+    color: #a5b4fc;
+}
+
+[data-theme="dark"] .empty-state {
+    color: #64748b;
+}
+
+[data-theme="dark"] .mobile-card {
+    background: #1e1b2e;
+    border-color: rgba(255,255,255,0.08);
+}
+
+[data-theme="dark"] .mobile-card-header {
+    border-color: rgba(255,255,255,0.08);
+}
+
+[data-theme="dark"] .mobile-card-name {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .mobile-card-row .label {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .mobile-card-actions {
+    border-color: rgba(255,255,255,0.08);
+}
+
+[data-theme="dark"] .btn-outline-primary {
+    color: #a5b4fc;
+    border-color: #6366f1;
+}
+
+[data-theme="dark"] .btn-outline-primary:hover {
+    background: #6366f1;
+    color: #fff;
+}
+
+[data-theme="dark"] .btn-outline-danger {
+    color: #fca5a5;
+    border-color: #ef4444;
+}
+
+[data-theme="dark"] .btn-outline-danger:hover {
+    background: #ef4444;
+    color: #fff;
+}
+
+[data-theme="dark"] .cal-day-detail {
+    border-color: rgba(255,255,255,0.1);
+}
+
+[data-theme="dark"] .cal-detail-item {
+    background: #252238 !important;
+    border-color: rgba(255,255,255,0.08);
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .content-area {
+    color: #e2e8f0;
+}
+
+/* Number spinner – dark friendly chrome */
+[data-theme="dark"] input[type="number"].form-control {
+    color-scheme: dark;
+}
+
+input[type="number"].form-control {
+    color-scheme: light;
+}
+
+[data-theme="dark"] input[type="number"].form-control {
+    color-scheme: dark;
+}
+
+input[type="time"].form-control {
+    color-scheme: light;
+}
+
+[data-theme="dark"] input[type="time"].form-control {
+    color-scheme: dark;
+}
+
+/* Spinner buttons prettier – webkit only */
+@supports (-webkit-appearance: none) {
+    input[type="number"].form-control {
+        padding-right: 8px;
+    }
+}
