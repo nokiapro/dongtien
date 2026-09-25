@@ -288,6 +288,112 @@ function getDaysInMonth(month, year) {
     return new Date(year, month, 0).getDate();
 }
 
+const LUNAR_TZ = 7;
+function _INT(d) { return Math.floor(d); }
+function jdFromDate(dd, mm, yy) {
+    var a = _INT((14 - mm) / 12);
+    var y = yy + 4800 - a;
+    var m = mm + 12 * a - 3;
+    var jd = dd + _INT((153 * m + 2) / 5) + 365 * y + _INT(y / 4) - _INT(y / 100) + _INT(y / 400) - 32045;
+    if (jd < 2299161) {
+        jd = dd + _INT((153 * m + 2) / 5) + 365 * y + _INT(y / 4) - 32083;
+    }
+    return jd;
+}
+function NewMoon(k) {
+    var T = k / 1236.85, T2 = T * T, T3 = T2 * T, dr = Math.PI / 180;
+    var Jd1 = 2415020.75933 + 29.53058868 * k + 0.0001178 * T2 - 0.000000155 * T3;
+    Jd1 = Jd1 + 0.00033 * Math.sin((166.56 + 132.87 * T - 0.009173 * T2) * dr);
+    var M = 359.2242 + 29.10535608 * k - 0.0000333 * T2 - 0.00000347 * T3;
+    var Mpr = 306.0253 + 385.81691806 * k + 0.0107306 * T2 + 0.00001236 * T3;
+    var F = 21.2964 + 390.67050646 * k - 0.0016528 * T2 - 0.00000239 * T3;
+    var C1 = (0.1734 - 0.000393 * T) * Math.sin(M * dr) + 0.0021 * Math.sin(2 * dr * M);
+    C1 = C1 - 0.4068 * Math.sin(Mpr * dr) + 0.0161 * Math.sin(dr * 2 * Mpr);
+    C1 = C1 - 0.0004 * Math.sin(dr * 3 * Mpr);
+    C1 = C1 + 0.0104 * Math.sin(dr * 2 * F) - 0.0051 * Math.sin(dr * (M + Mpr));
+    C1 = C1 - 0.0074 * Math.sin(dr * (M - Mpr)) + 0.0004 * Math.sin(dr * (2 * F + M));
+    C1 = C1 - 0.0004 * Math.sin(dr * (2 * F - M)) - 0.0006 * Math.sin(dr * (2 * F + Mpr));
+    C1 = C1 + 0.0010 * Math.sin(dr * (2 * F - Mpr)) + 0.0005 * Math.sin(dr * (2 * Mpr + M));
+    var deltat;
+    if (T < -11) {
+        deltat = 0.001 + 0.000839 * T + 0.0002261 * T2 - 0.00000845 * T3 - 0.000000081 * T * T3;
+    } else {
+        deltat = -0.000278 + 0.000265 * T + 0.000262 * T2;
+    }
+    return Jd1 + C1 - deltat;
+}
+function SunLongitude(jdn) {
+    var T = (jdn - 2451545.0) / 36525, T2 = T * T, dr = Math.PI / 180;
+    var M = 357.52910 + 35999.05030 * T - 0.0001559 * T2 - 0.00000048 * T * T2;
+    var L0 = 280.46645 + 36000.76983 * T + 0.0003032 * T2;
+    var DL = (1.914600 - 0.004817 * T - 0.000014 * T2) * Math.sin(dr * M);
+    DL = DL + (0.019993 - 0.000101 * T) * Math.sin(dr * 2 * M) + 0.000290 * Math.sin(dr * 3 * M);
+    var L = (L0 + DL) * dr;
+    L = L - Math.PI * 2 * (_INT(L / (Math.PI * 2)));
+    return L;
+}
+function getSunLongitude(dayNumber, timeZone) {
+    return _INT(SunLongitude(dayNumber - 0.5 - timeZone / 24) / Math.PI * 6);
+}
+function getNewMoonDay(k, timeZone) {
+    return _INT(NewMoon(k) + 0.5 + timeZone / 24);
+}
+function getLunarMonth11(yy, timeZone) {
+    var off = jdFromDate(31, 12, yy) - 2415021;
+    var k = _INT(off / 29.530588853);
+    var nm = getNewMoonDay(k, timeZone);
+    var sunLong = getSunLongitude(nm, timeZone);
+    if (sunLong >= 9) nm = getNewMoonDay(k - 1, timeZone);
+    return nm;
+}
+function getLeapMonthOffset(a11, timeZone) {
+    var k = _INT((a11 - 2415021.076998695) / 29.530588853 + 0.5);
+    var last = 0, i = 1;
+    var arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone);
+    do {
+        last = arc;
+        i++;
+        arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone);
+    } while (arc != last && i < 14);
+    return i - 1;
+}
+function convertSolar2Lunar(dd, mm, yy, timeZone) {
+    var dayNumber = jdFromDate(dd, mm, yy);
+    var k = _INT((dayNumber - 2415021.076998695) / 29.530588853);
+    var monthStart = getNewMoonDay(k + 1, timeZone);
+    if (monthStart > dayNumber) monthStart = getNewMoonDay(k, timeZone);
+    var a11 = getLunarMonth11(yy, timeZone);
+    var b11 = a11;
+    var lunarYear;
+    if (a11 >= monthStart) {
+        lunarYear = yy;
+        a11 = getLunarMonth11(yy - 1, timeZone);
+    } else {
+        lunarYear = yy + 1;
+        b11 = getLunarMonth11(yy + 1, timeZone);
+    }
+    var lunarDay = dayNumber - monthStart + 1;
+    var diff = _INT((monthStart - a11) / 29);
+    var lunarLeap = 0;
+    var lunarMonth = diff + 11;
+    if (b11 - a11 > 365) {
+        var leapMonthDiff = getLeapMonthOffset(a11, timeZone);
+        if (diff >= leapMonthDiff) {
+            lunarMonth = diff + 10;
+            if (diff == leapMonthDiff) lunarLeap = 1;
+        }
+    }
+    if (lunarMonth > 12) lunarMonth = lunarMonth - 12;
+    if (lunarMonth >= 11 && diff < 4) lunarYear -= 1;
+    return { day: lunarDay, month: lunarMonth, year: lunarYear, leap: lunarLeap };
+}
+function formatLunarLabel(lunar) {
+    if (!lunar) return '';
+    var m = lunar.leap ? 'N' + lunar.month : lunar.month;
+    if (lunar.day === 1) return lunar.day + '/' + m;
+    return String(lunar.day);
+}
+
 function renderCalendar() {
     document.getElementById('calMonthLabel').textContent = `Tháng ${calMonth}/${calYear}`;
     const grid = document.getElementById('calGrid');
@@ -311,8 +417,16 @@ function renderCalendar() {
     for (let d = 1; d <= daysInMonth; d++) {
         const has = !!dayMap[d];
         const cls = 'cal-cell' + (has ? ' has-data' : '');
-        const title = has ? `${dayMap[d].count} người · ${formatMoney(dayMap[d].total)}` : '';
-        html += `<button type="button" class="${cls}" data-day="${d}" title="${title}" onclick="showCalDayDetail(${d})">${d}</button>`;
+        const lunar = convertSolar2Lunar(d, calMonth, calYear, LUNAR_TZ);
+        const lunarTxt = formatLunarLabel(lunar);
+        const titleParts = [];
+        if (has) titleParts.push(`${dayMap[d].count} người · ${formatMoney(dayMap[d].total)}`);
+        titleParts.push(`Âm lịch: ${lunar.day}/${lunar.month}${lunar.leap ? ' (nhuận)' : ''}/${lunar.year}`);
+        const title = titleParts.join(' · ');
+        html += `<button type="button" class="${cls}" data-day="${d}" title="${title}" onclick="showCalDayDetail(${d})">
+            <span class="cal-solar">${d}</span>
+            <span class="cal-lunar">${lunarTxt}</span>
+        </button>`;
     }
     grid.innerHTML = html;
 }
@@ -332,7 +446,9 @@ function showCalDayDetail(day) {
     const btn = document.querySelector(`.cal-cell[data-day="${day}"]`);
     if (btn) btn.classList.add('selected');
 
-    title.textContent = `Ngày ${day}/${calMonth}/${calYear}`;
+    const lunar = convertSolar2Lunar(day, calMonth, calYear, LUNAR_TZ);
+    const lunarStr = `${lunar.day}/${lunar.month}${lunar.leap ? ' (nhuận)' : ''}/${lunar.year}`;
+    title.innerHTML = `Ngày ${day}/${calMonth}/${calYear} <span class="cal-detail-lunar">(Âm: ${lunarStr})</span>`;
     const total = items.reduce((s, i) => s + (Number(i.tienDong) || 0), 0);
     totalEl.textContent = formatMoney(total);
 

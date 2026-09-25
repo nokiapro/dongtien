@@ -42,7 +42,7 @@ body {
     padding: 24px 12px;
     -webkit-font-smoothing: antialiased;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
 }
 
@@ -792,9 +792,32 @@ body {
     cursor: pointer;
     transition: all var(--transition);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0;
+    padding: 2px;
+    gap: 1px;
+    line-height: 1.15;
+}
+.cal-cell .cal-solar {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+.cal-cell .cal-lunar {
+    font-size: 0.65rem;
+    font-weight: 500;
+    opacity: 0.7;
+}
+.cal-cell.has-data .cal-lunar {
+    opacity: 0.85;
+}
+.cal-cell.selected .cal-lunar {
+    opacity: 0.9;
+}
+.cal-detail-lunar {
+    font-size: 0.85em;
+    font-weight: 500;
+    opacity: 0.8;
 }
 
 .cal-cell.empty {
