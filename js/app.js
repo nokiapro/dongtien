@@ -48,7 +48,7 @@ function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('Xu_theme', theme);
     const icon = document.getElementById('themeIcon');
-    if (icon) icon.className = theme === 'dark' ? 'bi bi-sun' : 'bi bi-moon-stars';
+    if (icon) icon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
 }
 function toggleTheme() {
     const cur = document.documentElement.getAttribute('data-theme') || 'light';
@@ -60,7 +60,7 @@ function showToast(message, type) {
     if (!container) return;
     const el = document.createElement('div');
     el.className = 'app-toast' + (type ? ' toast-' + type : '');
-    el.innerHTML = `<i class="bi bi-bell-fill me-2"></i><span>${escapeHtml(message)}</span>`;
+    el.innerHTML = `<i class="fa-solid fa-bell me-2"></i><span>${escapeHtml(message)}</span>`;
     container.appendChild(el);
     requestAnimationFrame(() => el.classList.add('show'));
     setTimeout(() => {
@@ -227,7 +227,7 @@ async function doLogin() {
         errorEl.classList.remove('hidden');
     } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> Đăng nhập';
+        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket me-1"></i> Đăng nhập';
     }
 }
 
@@ -290,8 +290,8 @@ function openCalendarModal(mode) {
     const titleEl = document.getElementById('calModalTitle');
     if (titleEl) {
         titleEl.innerHTML = calMode === 'tru'
-            ? '<i class="bi bi-calendar-minus me-2"></i>Lịch trừ Xu'
-            : '<i class="bi bi-calendar3 me-2"></i>Lịch đóng Xu';
+            ? '<i class="fa-solid fa-calendar-minus me-2"></i>Lịch trừ Xu'
+            : '<i class="fa-solid fa-calendar-days me-2"></i>Lịch đóng Xu';
     }
     const totalEl = document.getElementById('calDetailTotal');
     if (totalEl) {
@@ -552,10 +552,10 @@ function renderTable(resetPage) {
         const actionBtns = canEdit() ? `
             <td class="text-center">
                 <button class="btn btn-sm btn-outline-primary btn-action me-1" onclick="openEditModal('${item.id}')" title="Sửa">
-                    <i class="bi bi-pencil"></i>
+                    <i class="fa-solid fa-pen"></i>
                 </button>
                 <button class="btn btn-sm btn-outline-danger btn-action" onclick="openDeleteModal('${item.id}')" title="Xóa">
-                    <i class="bi bi-trash"></i>
+                    <i class="fa-solid fa-trash"></i>
                 </button>
             </td>
         ` : '';
@@ -593,10 +593,10 @@ function renderTable(resetPage) {
         const actionBtns = canEdit() ? `
             <div class="mobile-card-actions">
                 <button class="btn btn-sm btn-outline-primary" onclick="openEditModal('${item.id}')">
-                    <i class="bi bi-pencil me-1"></i>Sửa
+                    <i class="fa-solid fa-pen me-1"></i>Sửa
                 </button>
                 <button class="btn btn-sm btn-outline-danger" onclick="openDeleteModal('${item.id}')">
-                    <i class="bi bi-trash me-1"></i>Xóa
+                    <i class="fa-solid fa-trash me-1"></i>Xóa
                 </button>
             </div>
         ` : '';
@@ -610,16 +610,16 @@ function renderTable(resetPage) {
                 </div>
                 <div class="mobile-card-body">
                     <div class="mobile-card-row">
-                        <span class="label"><i class="bi bi-calendar3 me-1"></i>Ngày</span>
+                        <span class="label"><i class="fa-solid fa-calendar-days me-1"></i>Ngày</span>
                         <span>${item.ngay}/${item.thang}/${itemYear(item)}</span>
                     </div>
                     <div class="mobile-card-row">
-                        <span class="label"><i class="bi bi-clock me-1"></i>Giờ</span>
+                        <span class="label"><i class="fa-solid fa-clock me-1"></i>Giờ</span>
                         <span>${formatGioDisplay(item.gio)}</span>
                     </div>
                     ${item.ghiChu ? `
                     <div class="mobile-card-row">
-                        <span class="label"><i class="bi bi-chat-left-text me-1"></i>Ghi chú</span>
+                        <span class="label"><i class="fa-solid fa-comment me-1"></i>Ghi chú</span>
                         <span>${escapeHtml(item.ghiChu)}</span>
                     </div>` : ''}
                 </div>
@@ -823,7 +823,7 @@ async function saveData() {
         alert('Lỗi lưu dữ liệu: ' + error.message);
     } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="bi bi-check-lg me-1"></i> Lưu';
+        btn.innerHTML = '<i class="fa-solid fa-check me-1"></i> Lưu';
     }
 }
 
