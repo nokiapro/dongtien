@@ -101,7 +101,8 @@ body {
     gap: 10px;
     width: 100%;
     overflow-x: auto;
-    padding-bottom: 2px;
+    overflow-y: visible;
+    padding: 4px 0 6px;
 }
 
 .header-btn {
@@ -127,12 +128,19 @@ body {
 }
 
 #btnTheme.header-btn {
-    width: 40px;
-    height: 40px;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
     padding: 0 !important;
-    display: inline-flex;
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
+    border-radius: 50% !important;
+    flex-shrink: 0;
+    overflow: visible;
+    line-height: 1 !important;
+    box-sizing: border-box !important;
 }
 
 .admin-badge {
@@ -1314,13 +1322,16 @@ body {
 }
 
 #btnTheme {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     padding: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
+    border-radius: 50% !important;
+    flex-shrink: 0;
+    overflow: visible;
+    box-sizing: border-box;
 }
 
 input[type="number"] {
