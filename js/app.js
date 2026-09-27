@@ -247,24 +247,30 @@ function formatMoney(amount) {
     return new Intl.NumberFormat('vi-VN').format(n) + ' Xu';
 }
 
+function netAmount(item) {
+    return (Number(item.tienDong) || 0) - (Number(item.tienTru) || 0);
+}
+
 function updateStats() {
     document.getElementById('totalRecords').textContent = data.length;
 
-    const total = data.reduce((sum, item) => sum + (Number(item.tienDong) || 0), 0);
-    document.getElementById('totalAmount').textContent = formatMoney(total);
+    const totalDong = data.reduce((sum, item) => sum + (Number(item.tienDong) || 0), 0);
+    const totalTru = data.reduce((sum, item) => sum + (Number(item.tienTru) || 0), 0);
+    document.getElementById('totalAmount').textContent = formatMoney(totalDong - totalTru);
+    document.getElementById('totalDeducted').textContent = formatMoney(totalTru);
 
     const now = new Date();
     const currentMonth = now.getMonth() + 1;
     const currentYear = now.getFullYear();
     const thisMonthTotal = data
         .filter(item => Number(item.thang) === currentMonth && itemYear(item) === currentYear)
-        .reduce((sum, item) => sum + (Number(item.tienDong) || 0), 0);
+        .reduce((sum, item) => sum + netAmount(item), 0);
     document.getElementById('thisMonth').textContent = formatMoney(thisMonthTotal);
 
     const today = now.getDate();
     const todayTotal = data
         .filter(item => Number(item.ngay) === today && Number(item.thang) === currentMonth && itemYear(item) === currentYear)
-        .reduce((sum, item) => sum + (Number(item.tienDong) || 0), 0);
+        .reduce((sum, item) => sum + netAmount(item), 0);
     document.getElementById('todayAmount').textContent = formatMoney(todayTotal);
 }
 
@@ -288,6 +294,7 @@ function getDaysInMonth(month, year) {
     return new Date(year, month, 0).getDate();
 }
 
+/* ===== Lịch âm (Ho Ngoc Duc algorithm, timezone VN = 7) ===== */
 const LUNAR_TZ = 7;
 function _INT(d) { return Math.floor(d); }
 function jdFromDate(dd, mm, yy) {
@@ -404,7 +411,7 @@ function renderCalendar() {
         if (Number(item.thang) !== calMonth || itemYear(item) !== calYear) return;
         const d = Number(item.ngay);
         if (!dayMap[d]) dayMap[d] = { total: 0, count: 0 };
-        dayMap[d].total += Number(item.tienDong) || 0;
+        dayMap[d].total += netAmount(item);
         dayMap[d].count += 1;
     });
 
@@ -449,22 +456,26 @@ function showCalDayDetail(day) {
     const lunar = convertSolar2Lunar(day, calMonth, calYear, LUNAR_TZ);
     const lunarStr = `${lunar.day}/${lunar.month}${lunar.leap ? ' (nhuận)' : ''}/${lunar.year}`;
     title.innerHTML = `Ngày ${day}/${calMonth}/${calYear} <span class="cal-detail-lunar">(Âm: ${lunarStr})</span>`;
-    const total = items.reduce((s, i) => s + (Number(i.tienDong) || 0), 0);
+    const total = items.reduce((s, i) => s + netAmount(i), 0);
     totalEl.textContent = formatMoney(total);
 
     if (items.length === 0) {
         list.innerHTML = '<p class="text-muted small mb-0">Chưa có ai đóng Xu ngày này.</p>';
     } else {
-        list.innerHTML = items.map(item => `
+        list.innerHTML = items.map(item => {
+            const tru = Number(item.tienTru) || 0;
+            const truHtml = tru > 0 ? `<span class="amount-deduct small ms-1">(-${formatMoney(tru)})</span>` : '';
+            return `
             <div class="cal-detail-item">
                 <div>
                     <strong>${escapeHtml(item.ten || '')}</strong>
                     <span class="text-muted small ms-2">${formatGioDisplay(item.gio)}</span>
                     ${item.ghiChu ? `<div class="small text-muted">${escapeHtml(item.ghiChu)}</div>` : ''}
                 </div>
-                <span class="amount">${formatMoney(item.tienDong)}</span>
+                <span><span class="amount">${formatMoney(item.tienDong)}</span>${truHtml}</span>
             </div>
-        `).join('');
+        `;
+        }).join('');
     }
     detail.classList.remove('d-none');
 }
@@ -513,6 +524,7 @@ function renderTable(resetPage) {
             </td>
         ` : '';
         const note = item.ghiChu ? escapeHtml(item.ghiChu) : '—';
+        const tru = Number(item.tienTru) || 0;
 
         return `
             <tr>
@@ -522,6 +534,7 @@ function renderTable(resetPage) {
                 <td>${formatGioDisplay(item.gio)}</td>
                 <td><span class="badge bg-primary">${item.thang}/${itemYear(item)}</span></td>
                 <td class="amount">${formatMoney(item.tienDong)}</td>
+                <td class="amount-deduct">${tru > 0 ? formatMoney(tru) : '—'}</td>
                 <td class="note-cell" title="${note}">${note}</td>
                 ${actionBtns}
             </tr>
@@ -530,6 +543,7 @@ function renderTable(resetPage) {
 
     mobileCards.innerHTML = pageItems.map((item, index) => {
         const rowNum = start + index + 1;
+        const tru = Number(item.tienTru) || 0;
         const actionBtns = canEdit() ? `
             <div class="mobile-card-actions">
                 <button class="btn btn-sm btn-outline-primary" onclick="openEditModal('${item.id}')">
@@ -557,6 +571,11 @@ function renderTable(resetPage) {
                         <span class="label"><i class="bi bi-clock me-1"></i>Giờ</span>
                         <span>${formatGioDisplay(item.gio)}</span>
                     </div>
+                    ${tru > 0 ? `
+                    <div class="mobile-card-row">
+                        <span class="label"><i class="bi bi-dash-circle me-1"></i>Xu trừ</span>
+                        <span class="amount-deduct">${formatMoney(tru)}</span>
+                    </div>` : ''}
                     ${item.ghiChu ? `
                     <div class="mobile-card-row">
                         <span class="label"><i class="bi bi-chat-left-text me-1"></i>Ghi chú</span>
@@ -690,6 +709,7 @@ function openEditModal(id) {
     document.getElementById('thang').value = item.thang;
     document.getElementById('nam').value = itemYear(item);
     document.getElementById('tienDong').value = item.tienDong;
+    document.getElementById('tienTru').value = item.tienTru || '';
     document.getElementById('ghiChu').value = item.ghiChu || '';
     formModal.show();
 }
@@ -704,13 +724,15 @@ async function saveData() {
     }
 
     const id = document.getElementById('editId').value;
+    const tienTruRaw = document.getElementById('tienTru').value;
     const payload = {
         ten: document.getElementById('ten').value.trim(),
         ngay: parseInt(document.getElementById('ngay').value),
         gio: getGioValue(),
         thang: parseInt(document.getElementById('thang').value),
         nam: parseInt(document.getElementById('nam').value),
-        tienDong: parseInt(document.getElementById('tienDong').value),
+        tienDong: parseInt(document.getElementById('tienDong').value) || 0,
+        tienTru: tienTruRaw === '' ? 0 : (parseInt(tienTruRaw) || 0),
         ghiChu: document.getElementById('ghiChu').value.trim(),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
@@ -837,6 +859,7 @@ async function importBackup(event) {
                 thang: Number(rec.thang) || 1,
                 nam: Number(rec.nam) || new Date().getFullYear(),
                 tienDong: Number(rec.tienDong) || 0,
+                tienTru: Number(rec.tienTru) || 0,
                 ghiChu: rec.ghiChu || '',
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),

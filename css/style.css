@@ -194,7 +194,7 @@ body {
 
 .stats-bar {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 14px;
     margin-bottom: 22px;
     background: transparent !important;
@@ -381,6 +381,16 @@ body {
     color: var(--success);
     white-space: nowrap;
     letter-spacing: -0.02em;
+}
+
+.amount-deduct {
+    font-weight: 700;
+    color: var(--danger);
+    white-space: nowrap;
+}
+
+.stat-value-deduct {
+    color: var(--danger) !important;
 }
 
 .badge {
@@ -594,6 +604,12 @@ body {
     .header-section h1 {
         font-size: 1.25rem;
     }
+    .stats-bar {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .stat-value {
+        font-size: 1.15rem;
+    }
 }
 
 @media (max-width: 767.98px) {
@@ -637,6 +653,9 @@ body {
     .stats-bar {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
+    }
+    .stats-bar .stat-item:last-child {
+        grid-column: 1 / -1;
     }
 
     .stat-item {
@@ -850,6 +869,55 @@ body {
     box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
 }
 
+.cal-legend {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(99, 102, 241, 0.06);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+}
+.cal-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+.cal-legend-sample {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: #f8fafc;
+    border: 2px solid rgba(16, 185, 129, 0.35);
+    line-height: 1.1;
+    flex-shrink: 0;
+}
+.cal-legend-sample .cal-solar {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+}
+.cal-legend-sample .cal-lunar {
+    font-size: 0.6rem;
+    font-weight: 500;
+    opacity: 0.75;
+}
+.cal-legend-text {
+    line-height: 1.35;
+}
+.cal-legend-note {
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: var(--text-muted);
+    padding-top: 6px;
+    border-top: 1px dashed var(--border);
+}
+
 .cal-day-detail {
     margin-top: 18px;
     padding-top: 16px;
@@ -1040,6 +1108,11 @@ body {
     color: #34d399;
 }
 
+[data-theme="dark"] .amount-deduct,
+[data-theme="dark"] .stat-value-deduct {
+    color: #f87171 !important;
+}
+
 [data-theme="dark"] .modal-header,
 [data-theme="dark"] .modal-footer {
     background: #252238;
@@ -1085,6 +1158,23 @@ body {
 
 [data-theme="dark"] .cal-detail-header strong {
     color: #ffffff;
+}
+
+[data-theme="dark"] .cal-legend {
+    background: rgba(99, 102, 241, 0.12);
+    border-color: rgba(129, 140, 248, 0.25);
+    color: #cbd5e1;
+}
+[data-theme="dark"] .cal-legend-sample {
+    background: #252238;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+[data-theme="dark"] .cal-legend-sample .cal-solar {
+    color: #ffffff;
+}
+[data-theme="dark"] .cal-legend-note {
+    color: #94a3b8;
+    border-top-color: rgba(148, 163, 184, 0.25);
 }
 
 [data-theme="dark"] .search-input-group .form-control,
