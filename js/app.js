@@ -264,16 +264,23 @@ function updateStats() {
     const now = new Date();
     const currentMonth = now.getMonth() + 1;
     const currentYear = now.getFullYear();
+    // Tháng này = Xu đóng tháng này (không trừ)
     const thisMonthTotal = data
         .filter(item => Number(item.thang) === currentMonth && itemYear(item) === currentYear)
-        .reduce((sum, item) => sum + netAmount(item), 0);
+        .reduce((sum, item) => sum + (Number(item.tienDong) || 0), 0);
     document.getElementById('thisMonth').textContent = formatMoney(thisMonthTotal);
 
     const today = now.getDate();
-    const todayTotal = data
-        .filter(item => Number(item.ngay) === today && Number(item.thang) === currentMonth && itemYear(item) === currentYear)
-        .reduce((sum, item) => sum + netAmount(item), 0);
+    const todayItems = data.filter(item =>
+        Number(item.ngay) === today && Number(item.thang) === currentMonth && itemYear(item) === currentYear
+    );
+    // Hôm nay + = Xu đóng hôm nay
+    const todayTotal = todayItems.reduce((sum, item) => sum + (Number(item.tienDong) || 0), 0);
     document.getElementById('todayAmount').textContent = formatMoney(todayTotal);
+    // Hôm nay − = Xu trừ hôm nay
+    const todayTru = todayItems.reduce((sum, item) => sum + (Number(item.tienTru) || 0), 0);
+    const todayDeductEl = document.getElementById('todayDeducted');
+    if (todayDeductEl) todayDeductEl.textContent = formatMoney(todayTru);
 }
 
 function openCalendarModal(mode) {
@@ -572,7 +579,17 @@ function renderTable(resetPage) {
 
     mobileCards.innerHTML = pageItems.map((item, index) => {
         const rowNum = start + index + 1;
+        const dong = Number(item.tienDong) || 0;
         const tru = Number(item.tienTru) || 0;
+        // Xu đóng = xanh; Xu trừ (khi không đóng) = đỏ — số nằm đối diện tên
+        let amountHtml;
+        if (dong > 0 && tru > 0) {
+            amountHtml = `<span class="amount mobile-card-amount">${formatMoney(dong)}</span><span class="amount-deduct mobile-card-amount ms-1">-${formatMoney(tru)}</span>`;
+        } else if (tru > 0 && dong <= 0) {
+            amountHtml = `<span class="amount-deduct mobile-card-amount">${formatMoney(tru)}</span>`;
+        } else {
+            amountHtml = `<span class="amount mobile-card-amount">${formatMoney(dong)}</span>`;
+        }
         const actionBtns = canEdit() ? `
             <div class="mobile-card-actions">
                 <button class="btn btn-sm btn-outline-primary" onclick="openEditModal('${item.id}')">
@@ -589,7 +606,7 @@ function renderTable(resetPage) {
                 <div class="mobile-card-header">
                     <span class="mobile-card-index">#${rowNum}</span>
                     <strong class="mobile-card-name">${escapeHtml(item.ten || '')}</strong>
-                    <span class="amount mobile-card-amount">${formatMoney(item.tienDong)}</span>
+                    ${amountHtml}
                 </div>
                 <div class="mobile-card-body">
                     <div class="mobile-card-row">
@@ -600,11 +617,6 @@ function renderTable(resetPage) {
                         <span class="label"><i class="bi bi-clock me-1"></i>Giờ</span>
                         <span>${formatGioDisplay(item.gio)}</span>
                     </div>
-                    ${tru > 0 ? `
-                    <div class="mobile-card-row">
-                        <span class="label"><i class="bi bi-dash-circle me-1"></i>Xu trừ</span>
-                        <span class="amount-deduct">${formatMoney(tru)}</span>
-                    </div>` : ''}
                     ${item.ghiChu ? `
                     <div class="mobile-card-row">
                         <span class="label"><i class="bi bi-chat-left-text me-1"></i>Ghi chú</span>
