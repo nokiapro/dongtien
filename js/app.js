@@ -19,6 +19,7 @@ let currentPage = 1;
 let filteredCache = [];
 let calMonth = new Date().getMonth() + 1;
 let calYear = new Date().getFullYear();
+let calMode = 'dong'; // 'dong' | 'tru'
 let calendarModal = null;
 let knownIds = new Set();
 let snapshotReady = false;
@@ -154,6 +155,7 @@ async function resolveUserRole(user) {
 function updateAdminUI() {
     const editorEls = [
         document.getElementById('btnAdd'),
+        document.getElementById('btnAddTru'),
         document.getElementById('actionCol'),
         document.getElementById('adminBadge'),
         document.getElementById('btnLogout')
@@ -274,9 +276,20 @@ function updateStats() {
     document.getElementById('todayAmount').textContent = formatMoney(todayTotal);
 }
 
-function openCalendarModal() {
+function openCalendarModal(mode) {
+    calMode = mode === 'tru' ? 'tru' : 'dong';
     calMonth = new Date().getMonth() + 1;
     calYear = new Date().getFullYear();
+    const titleEl = document.getElementById('calModalTitle');
+    if (titleEl) {
+        titleEl.innerHTML = calMode === 'tru'
+            ? '<i class="bi bi-calendar-minus me-2"></i>Lịch trừ Xu'
+            : '<i class="bi bi-calendar3 me-2"></i>Lịch đóng Xu';
+    }
+    const totalEl = document.getElementById('calDetailTotal');
+    if (totalEl) {
+        totalEl.className = calMode === 'tru' ? 'amount amount-deduct' : 'amount';
+    }
     renderCalendar();
     document.getElementById('calDayDetail').classList.add('d-none');
     calendarModal.show();
@@ -405,17 +418,29 @@ function renderCalendar() {
     document.getElementById('calMonthLabel').textContent = `Tháng ${calMonth}/${calYear}`;
     const grid = document.getElementById('calGrid');
     const daysInMonth = getDaysInMonth(calMonth, calYear);
+    const isTru = calMode === 'tru';
 
     const dayMap = {};
     data.forEach(item => {
         if (Number(item.thang) !== calMonth || itemYear(item) !== calYear) return;
         const d = Number(item.ngay);
-        if (!dayMap[d]) dayMap[d] = { total: 0, count: 0 };
-        dayMap[d].total += netAmount(item);
-        dayMap[d].count += 1;
+        if (isTru) {
+            const tru = Number(item.tienTru) || 0;
+            if (tru <= 0) return;
+            if (!dayMap[d]) dayMap[d] = { total: 0, count: 0 };
+            dayMap[d].total += tru;
+            dayMap[d].count += 1;
+        } else {
+            const dong = Number(item.tienDong) || 0;
+            if (dong <= 0) return;
+            if (!dayMap[d]) dayMap[d] = { total: 0, count: 0 };
+            dayMap[d].total += dong;
+            dayMap[d].count += 1;
+        }
     });
 
     const startWeekday = new Date(calYear, calMonth - 1, 1).getDay();
+    const dataCls = isTru ? ' has-data has-data-tru' : ' has-data';
 
     let html = '';
     for (let i = 0; i < startWeekday; i++) {
@@ -423,11 +448,11 @@ function renderCalendar() {
     }
     for (let d = 1; d <= daysInMonth; d++) {
         const has = !!dayMap[d];
-        const cls = 'cal-cell' + (has ? ' has-data' : '');
+        const cls = 'cal-cell' + (has ? dataCls : '');
         const lunar = convertSolar2Lunar(d, calMonth, calYear, LUNAR_TZ);
         const lunarTxt = formatLunarLabel(lunar);
         const titleParts = [];
-        if (has) titleParts.push(`${dayMap[d].count} người · ${formatMoney(dayMap[d].total)}`);
+        if (has) titleParts.push(`${dayMap[d].count} bản ghi · ${formatMoney(dayMap[d].total)}`);
         titleParts.push(`Âm lịch: ${lunar.day}/${lunar.month}${lunar.leap ? ' (nhuận)' : ''}/${lunar.year}`);
         const title = titleParts.join(' · ');
         html += `<button type="button" class="${cls}" data-day="${d}" title="${title}" onclick="showCalDayDetail(${d})">
@@ -439,11 +464,12 @@ function renderCalendar() {
 }
 
 function showCalDayDetail(day) {
-    const items = data.filter(item =>
-        Number(item.thang) === calMonth &&
-        Number(item.ngay) === day &&
-        itemYear(item) === calYear
-    );
+    const isTru = calMode === 'tru';
+    const items = data.filter(item => {
+        if (Number(item.thang) !== calMonth || Number(item.ngay) !== day || itemYear(item) !== calYear) return false;
+        if (isTru) return (Number(item.tienTru) || 0) > 0;
+        return (Number(item.tienDong) || 0) > 0;
+    });
     const detail = document.getElementById('calDayDetail');
     const list = document.getElementById('calDetailList');
     const title = document.getElementById('calDetailTitle');
@@ -456,15 +482,18 @@ function showCalDayDetail(day) {
     const lunar = convertSolar2Lunar(day, calMonth, calYear, LUNAR_TZ);
     const lunarStr = `${lunar.day}/${lunar.month}${lunar.leap ? ' (nhuận)' : ''}/${lunar.year}`;
     title.innerHTML = `Ngày ${day}/${calMonth}/${calYear} <span class="cal-detail-lunar">(Âm: ${lunarStr})</span>`;
-    const total = items.reduce((s, i) => s + netAmount(i), 0);
+    const total = items.reduce((s, i) => s + (isTru ? (Number(i.tienTru) || 0) : (Number(i.tienDong) || 0)), 0);
     totalEl.textContent = formatMoney(total);
+    totalEl.className = isTru ? 'amount amount-deduct' : 'amount';
 
     if (items.length === 0) {
-        list.innerHTML = '<p class="text-muted small mb-0">Chưa có ai đóng Xu ngày này.</p>';
+        list.innerHTML = isTru
+            ? '<p class="text-muted small mb-0">Chưa có Xu bị trừ ngày này.</p>'
+            : '<p class="text-muted small mb-0">Chưa có ai đóng Xu ngày này.</p>';
     } else {
         list.innerHTML = items.map(item => {
-            const tru = Number(item.tienTru) || 0;
-            const truHtml = tru > 0 ? `<span class="amount-deduct small ms-1">(-${formatMoney(tru)})</span>` : '';
+            const amount = isTru ? (Number(item.tienTru) || 0) : (Number(item.tienDong) || 0);
+            const amountCls = isTru ? 'amount amount-deduct' : 'amount';
             return `
             <div class="cal-detail-item">
                 <div>
@@ -472,7 +501,7 @@ function showCalDayDetail(day) {
                     <span class="text-muted small ms-2">${formatGioDisplay(item.gio)}</span>
                     ${item.ghiChu ? `<div class="small text-muted">${escapeHtml(item.ghiChu)}</div>` : ''}
                 </div>
-                <span><span class="amount">${formatMoney(item.tienDong)}</span>${truHtml}</span>
+                <span class="${amountCls}">${formatMoney(amount)}</span>
             </div>
         `;
         }).join('');
@@ -694,6 +723,25 @@ function openAddModal() {
     document.getElementById('ngay').value = now.getDate();
     document.getElementById('nam').value = now.getFullYear();
     setGioValue(`${pad2(now.getHours())}:${pad2(now.getMinutes())}:${pad2(now.getSeconds())}`);
+    document.getElementById('tienDong').required = true;
+    document.getElementById('tienDong').min = '0';
+    document.getElementById('tienTru').required = false;
+}
+
+function openAddTruModal() {
+    if (!canEdit()) return;
+    document.getElementById('modalTitle').textContent = 'Ghi nhận trừ Xu';
+    document.getElementById('dataForm').reset();
+    document.getElementById('editId').value = '';
+    const now = new Date();
+    document.getElementById('thang').value = now.getMonth() + 1;
+    document.getElementById('ngay').value = now.getDate();
+    document.getElementById('nam').value = now.getFullYear();
+    setGioValue(`${pad2(now.getHours())}:${pad2(now.getMinutes())}:${pad2(now.getSeconds())}`);
+    document.getElementById('tienDong').value = '0';
+    document.getElementById('tienDong').required = false;
+    document.getElementById('tienTru').required = true;
+    document.getElementById('tienTru').focus();
 }
 
 function openEditModal(id) {
@@ -711,6 +759,8 @@ function openEditModal(id) {
     document.getElementById('tienDong').value = item.tienDong;
     document.getElementById('tienTru').value = item.tienTru || '';
     document.getElementById('ghiChu').value = item.ghiChu || '';
+    document.getElementById('tienDong').required = true;
+    document.getElementById('tienTru').required = false;
     formModal.show();
 }
 
@@ -725,14 +775,20 @@ async function saveData() {
 
     const id = document.getElementById('editId').value;
     const tienTruRaw = document.getElementById('tienTru').value;
+    const tienDongVal = parseInt(document.getElementById('tienDong').value) || 0;
+    const tienTruVal = tienTruRaw === '' ? 0 : (parseInt(tienTruRaw) || 0);
+    if (tienDongVal <= 0 && tienTruVal <= 0) {
+        alert('Cần nhập Xu đóng hoặc Xu bị trừ (ít nhất một trong hai > 0).');
+        return;
+    }
     const payload = {
         ten: document.getElementById('ten').value.trim(),
         ngay: parseInt(document.getElementById('ngay').value),
         gio: getGioValue(),
         thang: parseInt(document.getElementById('thang').value),
         nam: parseInt(document.getElementById('nam').value),
-        tienDong: parseInt(document.getElementById('tienDong').value) || 0,
-        tienTru: tienTruRaw === '' ? 0 : (parseInt(tienTruRaw) || 0),
+        tienDong: tienDongVal,
+        tienTru: tienTruVal,
         ghiChu: document.getElementById('ghiChu').value.trim(),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };

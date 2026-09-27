@@ -36,6 +36,9 @@
                     <button id="btnAdd" class="btn header-btn hidden" data-bs-toggle="modal" data-bs-target="#formModal" onclick="openAddModal()">
                         <i class="bi bi-plus-lg me-1"></i> Thêm mới
                     </button>
+                    <button id="btnAddTru" class="btn header-btn header-btn-tru hidden" data-bs-toggle="modal" data-bs-target="#formModal" onclick="openAddTruModal()">
+                        <i class="bi bi-dash-lg me-1"></i> Trừ Xu
+                    </button>
                     <button id="btnBackup" class="btn header-btn hidden" onclick="exportBackup()" title="Sao lưu dữ liệu">
                         <i class="bi bi-download me-1"></i> Sao lưu
                     </button>
@@ -89,8 +92,11 @@
                         <span class="input-group-text"><i class="bi bi-search"></i></span>
                         <input type="text" class="form-control" id="searchInput" placeholder="Tìm theo tên..." oninput="renderTable()">
                     </div>
-                    <button type="button" class="btn btn-calendar" id="btnCalendar" onclick="openCalendarModal()" title="Xem lịch đóng Xu">
+                    <button type="button" class="btn btn-calendar" id="btnCalendar" onclick="openCalendarModal('dong')" title="Xem lịch đóng Xu">
                         <i class="bi bi-calendar3"></i>
+                    </button>
+                    <button type="button" class="btn btn-calendar btn-calendar-tru" id="btnCalendarTru" onclick="openCalendarModal('tru')" title="Xem lịch trừ Xu">
+                        <i class="bi bi-calendar-minus"></i>
                     </button>
                 </div>
 
@@ -135,7 +141,7 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="bi bi-calendar3 me-2"></i>Lịch đóng Xu</h5>
+                    <h5 class="modal-title" id="calModalTitle"><i class="bi bi-calendar3 me-2"></i>Lịch đóng Xu</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -148,19 +154,6 @@
                         <span>CN</span><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span>
                     </div>
                     <div id="calGrid" class="cal-grid"></div>
-                    <div class="cal-legend">
-                        <div class="cal-legend-item">
-                            <span class="cal-legend-sample">
-                                <span class="cal-solar">15</span>
-                                <span class="cal-lunar">1/8</span>
-                            </span>
-                            <span class="cal-legend-text"><strong>Số to</strong> = Dương lịch · <strong>Số nhỏ</strong> = Âm lịch (ngày/tháng)</span>
-                        </div>
-                        <p class="cal-legend-note mb-0">
-                            <i class="bi bi-info-circle me-1"></i>
-                            Ngày · Giờ · Tháng · Năm dùng để ghi nhận chính xác thời điểm đóng Xu, thống kê theo ngày/tháng và xem trên lịch.
-                        </p>
-                    </div>
                     <div id="calDayDetail" class="cal-day-detail d-none">
                         <div class="cal-detail-header">
                             <strong id="calDetailTitle">Ngày —</strong>

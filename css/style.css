@@ -761,6 +761,25 @@ body {
     box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
 }
 
+.btn-calendar-tru {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(249, 115, 22, 0.1));
+    color: #dc2626;
+}
+.btn-calendar-tru:hover {
+    background: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+}
+
+.header-btn-tru {
+    border-color: rgba(239, 68, 68, 0.35) !important;
+    color: #dc2626 !important;
+}
+.header-btn-tru:hover {
+    background: rgba(239, 68, 68, 0.12) !important;
+    color: #b91c1c !important;
+}
+
 .cal-month-nav {
     display: flex;
     align-items: center;
@@ -860,6 +879,18 @@ body {
 .cal-cell.has-data:hover {
     background: rgba(16, 185, 129, 0.2);
     border-color: #059669;
+}
+
+.cal-cell.has-data-tru {
+    border-color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: #b91c1c !important;
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2) !important;
+}
+
+.cal-cell.has-data-tru:hover {
+    background: rgba(239, 68, 68, 0.18) !important;
+    border-color: #dc2626 !important;
 }
 
 .cal-cell.selected {
@@ -1154,6 +1185,18 @@ body {
 [data-theme="dark"] .cal-cell.has-data:hover {
     background: rgba(255, 255, 255, 0.16) !important;
     border-color: #ffffff !important;
+}
+
+[data-theme="dark"] .cal-cell.has-data-tru {
+    border-color: #f87171 !important;
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #fecaca !important;
+    box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.3) !important;
+}
+
+[data-theme="dark"] .cal-cell.has-data-tru:hover {
+    background: rgba(239, 68, 68, 0.25) !important;
+    border-color: #f87171 !important;
 }
 
 [data-theme="dark"] .cal-detail-header strong {
