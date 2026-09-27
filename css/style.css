@@ -194,7 +194,7 @@ body {
 
 .stats-bar {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 10px;
     margin-bottom: 18px;
     background: transparent !important;
@@ -612,14 +612,14 @@ body {
         font-size: 1.25rem;
     }
     .stats-bar {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         gap: 6px;
     }
     .stat-value {
-        font-size: 0.68rem;
+        font-size: 0.65rem;
     }
     .stat-label {
-        font-size: 0.5rem;
+        font-size: 0.48rem;
     }
     .stat-item {
         padding: 6px 3px;
@@ -670,34 +670,32 @@ body {
     }
 
     .stats-bar {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 6px;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 4px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        overflow: visible;
     }
 
     .stat-item {
-        flex: 0 0 auto;
-        min-width: 90px;
-        padding: 6px 5px;
+        min-width: 0;
+        padding: 8px 6px;
+        grid-column: auto;
     }
 
     .stat-icon {
-        width: 18px;
-        height: 18px;
-        margin: 0 auto 2px;
-        border-radius: 5px;
-        font-size: 0.65rem;
+        width: 20px;
+        height: 20px;
+        margin: 0 auto 3px;
+        border-radius: 6px;
+        font-size: 0.7rem;
     }
 
     .stat-value {
-        font-size: 0.68rem;
+        font-size: 0.7rem;
     }
 
     .stat-label {
-        font-size: 0.48rem;
+        font-size: 0.52rem;
     }
 
     .table-container {
